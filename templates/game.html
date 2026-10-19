@@ -4,914 +4,560 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FTFG | Attribute Draft</title>
-
+<title>FTFG Attribute Draft</title>
 <style>
 :root {
-    --green: #66e39a;
-    --navy: #0b0f17;
-    --panel: #151e2c;
-    --border: #344258;
-    --muted: #b8c5d8;
+    --bg: #07111f;
+    --panel: #101f32;
+    --green: #a3ff72;
+    --text: #f5f7fb;
+    --muted: #aab8c9;
+    --border: #2c4056;
 }
-
 * { box-sizing: border-box; }
-
 body {
     margin: 0;
-    padding: 20px;
-    background: radial-gradient(circle at top, #202b3e, var(--navy) 70%);
-    color: #f4f7fb;
+    background: var(--bg);
+    color: var(--text);
     font-family: Arial, sans-serif;
+}
+header {
+    padding: 24px 16px;
     text-align: center;
+    border-bottom: 1px solid var(--border);
 }
-
-.game { max-width: 1000px; margin: auto; }
-
-h1 {
+header h1 {
+    margin: 0;
     color: var(--green);
-    font-size: clamp(28px, 5vw, 44px);
-    font-weight: 900;
     letter-spacing: 2px;
-    text-shadow: 0 0 20px #66e39a35;
 }
-
-h2 { text-transform: uppercase; letter-spacing: 1px; }
-
-.subtitle, .status, .score-label {
-    color: var(--muted);
-    line-height: 1.6;
+header p { color: var(--muted); }
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px;
 }
-
-.panel {
-    background: linear-gradient(145deg, #1c2636, #111925);
+a, button {
     border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 24px;
-    margin: 20px 0;
-    box-shadow: 0 12px 30px #0004;
-}
-
-button, input {
-    font: inherit;
-}
-
-button {
-    border: none;
-    border-radius: 10px;
-    padding: 13px 18px;
-    font-weight: bold;
+    border-radius: 9px;
+    padding: 11px 15px;
+    color: var(--text);
+    background: var(--panel);
+    text-decoration: none;
     cursor: pointer;
-    margin: 5px;
-    transition: transform .15s, opacity .15s;
+    font-weight: bold;
 }
-
-button:not(:disabled):hover { transform: translateY(-2px); }
-button:disabled { opacity: .35; cursor: not-allowed; }
-
-.primary {
-    background: var(--green);
-    color: #101722;
+button:hover, a:hover { border-color: var(--green); }
+button:disabled { opacity: .4; cursor: not-allowed; }
+main {
+    max-width: 1100px;
+    padding: 16px;
+    margin: auto;
 }
-
-.secondary {
-    background: #29364a;
-    border: 1px solid #465671;
-    color: white;
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 18px;
 }
-
-.sound-toggle {
-    float: right;
-    background: #29364a;
-    color: white;
-    border: 1px solid #465671;
-}
-
-.progress-track {
-    height: 8px;
-    background: #303b4e;
-    border-radius: 10px;
-    overflow: hidden;
-    max-width: 500px;
-    margin: 16px auto;
-}
-
-.progress-fill {
-    height: 100%;
-    width: 0%;
-    background: var(--green);
-    transition: width .3s;
-}
-
-/* SLOT MACHINE */
-
-.machine {
-    max-width: 620px;
-    margin: 25px auto;
-    padding: 18px;
-    border: 3px solid #5b708b;
-    border-radius: 24px;
-    background: linear-gradient(145deg, #26364d, #080d15);
-    box-shadow: 0 0 25px #66e39a15, inset 0 0 20px #0008;
-}
-
-.machine-top {
-    color: var(--green);
-    font-size: 13px;
-    font-weight: 900;
-    letter-spacing: 5px;
-    margin-bottom: 14px;
-}
-
+h2 { margin-top: 0; }
+.muted { color: var(--muted); }
+.green { color: var(--green); }
 .reels {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 20px 0;
 }
-
 .reel {
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    overflow: hidden;
+    min-height: 88px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 12px 4px;
+    border: 1px solid var(--border);
     border-radius: 12px;
-    border: 3px solid #63748a;
-    background: linear-gradient(#e9eef6, #aab8c9);
-    color: #101722;
-    font-size: clamp(13px, 2.8vw, 20px);
-    font-weight: 900;
-    text-transform: uppercase;
+    background: #07111f;
+    font-size: clamp(15px, 3vw, 22px);
+    font-weight: bold;
     overflow-wrap: anywhere;
 }
-
-.reel.spinning {
-    animation: reelFlash .12s infinite alternate;
-}
-
-@keyframes reelFlash {
-    from { background: #e9eef6; }
-    to { background: #baf8d1; }
-}
-
-.machine-bottom {
-    color: #a8b6c9;
-    font-size: 12px;
-    letter-spacing: 3px;
-    margin-top: 14px;
-}
-
-.person-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    background: #101722;
-    border: 1px solid #3b4b61;
-    border-radius: 16px;
-    padding: 18px;
-    margin: 18px auto;
-    max-width: 500px;
-}
-
-.player-photo {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 14px;
-    border: 3px solid var(--green);
-    background: #29364a;
-}
-
-.ovr-badge {
-    min-width: 85px;
-    padding: 12px;
-    border-radius: 12px;
-    background: linear-gradient(145deg, var(--green), #159957);
-    color: #07120c;
-    font-size: 34px;
-    font-weight: 900;
-}
-
-.ovr-badge small {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 2px;
-}
-
-.person {
-    font-size: 27px;
-    font-weight: 900;
-    margin: 8px;
+#currentAttribute {
+    font-size: 25px;
     color: var(--green);
-}
-
-.attributes {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.attribute {
-    background: #29364a;
-    color: white;
-    border: 1px solid #465671;
-}
-
-.attribute:not(:disabled):hover {
-    background: #36516b;
-    border-color: var(--green);
-}
-
-.attribute.used {
-    text-decoration: line-through;
-    background: #151923;
-    color: #7d899b;
-}
-
-.score {
-    font-size: clamp(42px, 8vw, 68px);
-    color: var(--green);
-    font-weight: 900;
-}
-
-.score-label { margin-top: 0; }
-
-#roster {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    text-align: left;
-}
-
-.roster-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #202c3e;
-    border: 1px solid #35455d;
-    border-radius: 12px;
-    overflow-wrap: anywhere;
-}
-
-.roster-photo {
-    width: 55px;
-    height: 55px;
-    object-fit: cover;
-    border-radius: 9px;
-    flex-shrink: 0;
-}
-
-.roster-item strong { color: var(--green); }
-.roster-item.unassigned strong { color: #f0bc66; }
-
-.results-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.result-card {
-    padding: 18px 8px;
-    border: 1px solid #40516a;
-    border-radius: 14px;
-    background: #101722;
-}
-
-.result-number {
-    font-size: clamp(28px, 5vw, 42px);
-    font-weight: 900;
-    color: var(--green);
-}
-
-.result-name {
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.field {
-    width: 100%;
-    max-width: 400px;
-    padding: 13px;
-    border: 1px solid #52637b;
-    border-radius: 9px;
-    background: #0b0f17;
-    color: white;
-    margin: 8px 0;
-}
-
-.leaderboard-row {
-    display: grid;
-    grid-template-columns: 45px 1fr 70px 75px 90px;
-    gap: 8px;
-    align-items: center;
-    text-align: left;
-    padding: 12px 6px;
-    border-bottom: 1px solid #344258;
-    font-size: 13px;
-}
-
-.leaderboard-row:first-child { color: var(--green); }
-.leaderboard-head {
-    color: var(--muted);
-    font-size: 11px;
     font-weight: bold;
 }
-
-.small-note {
-    color: #8998ae;
-    font-size: 13px;
+.center { text-align: center; }
+.status { min-height: 24px; color: var(--muted); }
+button.primary {
+    color: #08111c;
+    background: var(--green);
+    border-color: var(--green);
 }
-
-.hidden { display: none !important; }
-
-@media(max-width: 520px) {
-    body { padding: 10px; }
+.attributes, .players, .results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+.attribute-card, .player-card, .result-card {
+    background: #07111f;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    min-width: 0;
+}
+.player-card { text-align: center; }
+.player-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #1b2d41;
+}
+.player-card img.missing { display: none; }
+.player-name { font-weight: bold; margin: 10px 0 5px; }
+.attribute-card strong { display: block; margin-bottom: 6px; }
+.score { font-size: 30px; color: var(--green); font-weight: bold; }
+input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #07111f;
+    color: white;
+    font-size: 16px;
+}
+table { width: 100%; border-collapse: collapse; }
+th, td {
+    text-align: left;
+    padding: 10px 7px;
+    border-bottom: 1px solid var(--border);
+}
+.table-wrap { overflow-x: auto; }
+small { color: var(--muted); }
+@media (max-width: 520px) {
+    main { padding: 10px; }
     .panel { padding: 14px; }
-    .person-card { gap: 10px; padding: 10px; flex-wrap: wrap; }
-    .player-photo { width: 90px; height: 90px; }
-    .ovr-badge { min-width: 65px; font-size: 28px; }
-    .person { font-size: 22px; }
-    #roster { grid-template-columns: 1fr; }
-    .results-grid { grid-template-columns: 1fr; }
-    .result-card { padding: 12px; }
-    .leaderboard-row {
-        grid-template-columns: 28px 1fr 48px 58px 66px;
-        gap: 4px;
-        font-size: 11px;
-    }
+    .reel { min-height: 72px; }
+    th, td { padding: 8px 4px; font-size: 13px; }
 }
 </style>
 </head>
-
 <body>
-<main class="game">
-    <button class="sound-toggle" id="soundButton" onclick="toggleSound()">
-        🔊 SOUND ON
-    </button>
+<header>
+    <h1>FTFG ATTRIBUTE DRAFT</h1>
+    <p>FOR THE FUTURE GOOD</p>
+    <nav>
+        <a href="/">Attribute Draft</a>
+        <a href="/tier-list">Tier List Maker</a>
+        <button id="soundButton" type="button">Sound: ON</button>
+    </nav>
+</header>
 
-    <h1>FTFG Attribute Draft</h1>
-    <p class="subtitle">Nine players. Seven attributes. Draft your best build.</p>
-
-    <section class="panel">
-        <h2>Player Selection</h2>
-        <p class="status" id="turn">Turn 1 of 9</p>
-
-        <div class="progress-track">
-            <div class="progress-fill" id="progress"></div>
-        </div>
-
-        <div class="machine">
-            <div class="machine-top">★ FTFG JACKPOT ★</div>
-            <div class="reels">
-                <div class="reel" id="reel1">FTFG</div>
-                <div class="reel" id="reel2">DRAFT</div>
-                <div class="reel" id="reel3">TIME</div>
-            </div>
-            <div class="machine-bottom">SPIN • SELECT • BUILD</div>
-        </div>
-
-        <button class="primary" id="spinButton" onclick="spinWheel()">
-            🎰 SPIN FOR A PLAYER
-        </button>
-
-        <div class="person-card">
-            <img class="player-photo" id="currentPhoto"
-                 src="/static/images/max.jpg" alt="Player photo"
-                 onerror="this.style.visibility='hidden'">
-
-            <div class="ovr-badge">
-                <span id="currentOvr">--</span>
-                <small>OVR</small>
-            </div>
-
-            <div>
-                <div class="person" id="currentPerson">Ready to draft?</div>
-                <p id="currentHeight" class="status">Spin to select a player</p>
-            </div>
-        </div>
-
-        <p class="status" id="message">Spin the machine to reveal your first player.</p>
-    </section>
-
-    <section class="panel">
-        <h2>Choose an Attribute</h2>
-        <p class="status">Each attribute can only be used once.</p>
-        <div class="attributes" id="attributes"></div>
-        <p class="small-note">
-            Height OVR is based on actual height. All other ratings range from 1–99.
+<main>
+    <section class="panel center">
+        <h2>Draft your seven attributes</h2>
+        <p class="muted">
+            Each spin assigns one unique player to the next attribute.
+            Seven players will be selected; two will remain undrafted.
         </p>
+        <p>Attribute <span id="roundNumber">1</span> of 7</p>
+        <div id="currentAttribute">Height</div>
+        <div class="reels" aria-live="polite">
+            <div class="reel" id="reel1">Ready</div>
+            <div class="reel" id="reel2">Set</div>
+            <div class="reel" id="reel3">Draft</div>
+        </div>
+        <button id="spinButton" class="primary" type="button">SPIN</button>
+        <button id="resetButton" type="button">Restart Draft</button>
+        <p id="status" class="status" role="status">Press SPIN to start.</p>
     </section>
 
     <section class="panel">
-        <h2>Live Draft Score</h2>
-        <div class="score" id="score">0</div>
-        <p class="score-label" id="scoreLabel">Total points so far · 7 attributes available</p>
-
-        <h2>Your Draft Board</h2>
-        <div id="roster">
-            <p class="status">Your drafted players will appear here.</p>
+        <h2>Your build</h2>
+        <div id="assignments" class="attributes">
+            <p class="muted">Your assigned players will appear here.</p>
         </div>
-    </section>
-
-    <section class="panel hidden" id="resultsPanel">
-        <h2>🏆 Your Final Build</h2>
-        <p class="status">Your seven drafted attributes decide your scores.</p>
-
-        <div class="results-grid">
-            <div class="result-card">
-                <div class="result-number" id="finalOvr">0</div>
-                <div class="result-name">Average OVR</div>
-            </div>
-            <div class="result-card">
-                <div class="result-number" id="moneyScore">0</div>
-                <div class="result-name">Money</div>
-            </div>
-            <div class="result-card">
-                <div class="result-number" id="fuhedScore">0</div>
-                <div class="result-name">Bih's Fuhed</div>
-            </div>
-        </div>
-
-        <p class="status" id="resultDescription"></p>
-
-        <h2>Join the Leaderboard</h2>
-        <p class="status">Enter your name to submit your build.</p>
-        <form id="leaderboardForm">
-            <input class="field" id="playerName" maxlength="24"
-                   placeholder="Enter your name" required>
-            <br>
-            <button class="primary" type="submit" id="submitScoreButton">
-                SUBMIT MY SCORE
-            </button>
-        </form>
-        <p class="status" id="submitMessage"></p>
-    </section>
-
-    <section class="panel" id="leaderboardPanel">
-        <h2>🌎 FTFG Leaderboard</h2>
-        <p class="status">Compare your build with other players.</p>
-        <div id="leaderboard">
-            <p class="small-note">
-                The shared leaderboard will activate after the server setup is complete.
-            </p>
-        </div>
-        <button class="secondary" onclick="loadLeaderboard()">REFRESH LEADERBOARD</button>
     </section>
 
     <section class="panel">
-        <button class="primary" onclick="restartGame()">PLAY AGAIN</button>
+        <h2>Player pool</h2>
+        <div id="playerPool" class="players"></div>
+    </section>
+
+    <section class="panel" id="resultsPanel" hidden>
+        <h2>Final results</h2>
+        <div class="results">
+            <div class="result-card">
+                <p class="muted">Overall OVR</p>
+                <div class="score" id="overallScore">0</div>
+            </div>
+            <div class="result-card">
+                <p class="muted">Money score</p>
+                <div class="score" id="moneyScore">0</div>
+            </div>
+            <div class="result-card">
+                <p class="muted">Bih's Fuhed score</p>
+                <div class="score" id="fuhedScore">0</div>
+            </div>
+        </div>
+        <p class="muted">
+            Overall averages all seven attributes. Money averages Smarts,
+            Kindliness, Humorous, and Manners. Bih's Fuhed averages Build,
+            Humorous, Manners, and Height.
+        </p>
+        <h3>Submit your score</h3>
+        <p class="muted">Choose a name for the shared leaderboard.</p>
+        <input id="leaderboardName" maxlength="24" placeholder="Enter your name" autocomplete="nickname">
+        <p><button id="submitButton" class="primary" type="button">Submit to leaderboard</button></p>
+        <p id="submitStatus" class="status" role="status"></p>
+    </section>
+
+    <section class="panel">
+        <h2>Shared leaderboard</h2>
+        <p class="muted">Highest overall scores appear first.</p>
+        <button id="refreshButton" type="button">Refresh leaderboard</button>
+        <p id="leaderboardStatus" class="status" role="status"></p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th><th>Name</th><th>Overall</th><th>Money</th><th>Fuhed</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardRows">
+                    <tr><td colspan="5">Loading scores…</td></tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 </main>
 
 <script>
-const ratings = {
-    "Max": {Build:70, Smarts:99, Athleticism:94, Kindliness:91, Humorous:82, Manners:93},
-    "Quinn": {Build:89, Smarts:88, Athleticism:95, Kindliness:81, Humorous:88, Manners:85},
-    "Chase": {Build:75, Smarts:95, Athleticism:83, Kindliness:89, Humorous:83, Manners:80},
-    "Will": {Build:95, Smarts:83, Athleticism:88, Kindliness:94, Humorous:90, Manners:94},
-    "Walter": {Build:80, Smarts:99, Athleticism:87, Kindliness:97, Humorous:91, Manners:81},
-    "Connor": {Build:96, Smarts:79, Athleticism:85, Kindliness:80, Humorous:98, Manners:61},
-    "Noah": {Build:73, Smarts:86, Athleticism:93, Kindliness:85, Humorous:93, Manners:85},
-    "Jaden": {Build:96, Smarts:80, Athleticism:94, Kindliness:96, Humorous:90, Manners:95},
-    "Jackson": {Build:86, Smarts:96, Athleticism:85, Kindliness:89, Humorous:90, Manners:89}
-};
+const players = [
+    "Max", "Quinn", "Chase", "Will", "Walter",
+    "Connor", "Noah", "Jaden", "Jackson"
+];
 
-const actualHeights = {
-    "Max": "6'0\"", "Quinn": "6'3\"", "Chase": "5'11\"",
-    "Will": "5'11\"", "Walter": "6'5\"", "Connor": "5'11\"",
-    "Noah": "6'0\"", "Jaden": "5'8\"", "Jackson": "5'9\""
-};
-
-const people = Object.keys(ratings);
 const attributes = [
     "Height", "Build", "Smarts", "Athleticism",
     "Kindliness", "Humorous", "Manners"
 ];
 
-const photoFiles = {
-    Max: "max.jpg",
-    Quinn: "quinn.jpg",
-    Chase: "chase.jpg",
-    Will: "will.jpg",
-    Walter: "walter.jpg",
-    Connor: "connor.jpg",
-    Noah: "noah.jpg",
-    Jaden: "jaden.jpg",
-    Jackson: "jackson.jpg"
+const ratings = {
+    Max:     {Build:70, Smarts:99, Athleticism:94, Kindliness:91, Humorous:82, Manners:93},
+    Quinn:   {Build:89, Smarts:88, Athleticism:95, Kindliness:81, Humorous:88, Manners:85},
+    Chase:   {Build:75, Smarts:95, Athleticism:83, Kindliness:89, Humorous:83, Manners:80},
+    Will:    {Build:95, Smarts:83, Athleticism:88, Kindliness:94, Humorous:90, Manners:94},
+    Walter:  {Build:80, Smarts:99, Athleticism:87, Kindliness:97, Humorous:91, Manners:81},
+    Connor:  {Build:96, Smarts:79, Athleticism:85, Kindliness:80, Humorous:98, Manners:61},
+    Noah:    {Build:73, Smarts:86, Athleticism:93, Kindliness:85, Humorous:93, Manners:85},
+    Jaden:   {Build:96, Smarts:80, Athleticism:94, Kindliness:96, Humorous:90, Manners:95},
+    Jackson: {Build:86, Smarts:96, Athleticism:85, Kindliness:89, Humorous:90, Manners:89}
 };
 
-let remainingPeople = [...people];
-let usedAttributes = [];
-let assignments = {};
-let currentPerson = null;
-let totalScore = 0;
-let turn = 0;
+const heights = {
+    Max: "6'0\"", Quinn: "6'3\"", Chase: "5'11\"",
+    Will: "5'11\"", Walter: "6'5\"", Connor: "5'11\"",
+    Noah: "6'0\"", Jaden: "5'8\"", Jackson: "5'9\""
+};
+
+let round = 0;
+let build = {};
+let availablePlayers = [...players];
 let spinning = false;
-let gameOver = false;
-let soundOn = true;
+let soundEnabled = true;
 let audioContext = null;
 
 const $ = id => document.getElementById(id);
 
-function heightToOvr(height) {
-    const match = height.match(/^(\d+)'(\d+)"$/);
-    if (!match) return null;
-
-    const inches = Number(match[1]) * 12 + Number(match[2]);
+function heightOVR(height) {
+    const parts = height.split("'");
+    const inches = Number(parts[0]) * 12 + Number(parts[1].replace('"', ""));
     return Math.max(1, Math.min(99, 99 - (77 - inches) * 3));
 }
 
-function getRating(person, attribute) {
-    return attribute === "Height"
-        ? heightToOvr(actualHeights[person])
-        : ratings[person][attribute];
+function rating(player, attribute) {
+    return attribute === "Height" ? heightOVR(heights[player]) : ratings[player][attribute];
 }
 
-function photoPath(person) {
-    return "/static/images/" + photoFiles[person];
-}
-
-/* Sound effects use the browser's built-in audio generator. */
-function playSound(type) {
-    if (!soundOn) return;
-
+function playTone(frequency = 500, duration = 0.07, type = "sine") {
+    if (!soundEnabled) return;
     try {
         audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
-        if (audioContext.state === "suspended") audioContext.resume();
-
-        const now = audioContext.currentTime;
-        const notes = type === "spin" ? [330, 390] :
-                      type === "select" ? [520, 760] :
-                      type === "attribute" ? [440, 660] :
-                      [523, 659, 784, 1046];
-
-        notes.forEach((frequency, i) => {
-            const oscillator = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-
-            oscillator.type = type === "spin" ? "square" : "sine";
-            oscillator.frequency.value = frequency;
-            gain.gain.setValueAtTime(0.0001, now + i * 0.09);
-            gain.gain.exponentialRampToValueAtTime(0.12, now + i * 0.09 + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.09 + 0.16);
-
-            oscillator.connect(gain);
-            gain.connect(audioContext.destination);
-            oscillator.start(now + i * 0.09);
-            oscillator.stop(now + i * 0.09 + 0.18);
-        });
-    } catch (error) {
-        // The game still works if audio is unavailable.
-    }
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        oscillator.type = type;
+        oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.07, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + duration);
+    } catch (_) {}
 }
 
-function toggleSound() {
-    soundOn = !soundOn;
-    $("soundButton").textContent = soundOn ? "🔊 SOUND ON" : "🔇 SOUND OFF";
-    if (soundOn) playSound("select");
+function imagePath(player) {
+    return "/static/images/" + player.toLowerCase() + ".jpg";
 }
 
-function renderAttributes() {
-    const container = $("attributes");
-    container.innerHTML = "";
-
-    attributes.forEach(attribute => {
-        const button = document.createElement("button");
-        button.className = "attribute";
-        button.textContent = usedAttributes.includes(attribute)
-            ? attribute + " ✓"
-            : attribute;
-
-        if (usedAttributes.includes(attribute)) {
-            button.disabled = true;
-            button.classList.add("used");
+function createPlayerCard(player) {
+    const card = document.createElement("div");
+    card.className = "player-card";
+    const img = document.createElement("img");
+    img.src = imagePath(player);
+    img.alt = player;
+    img.loading = "lazy";
+    img.onerror = () => {
+        if (!img.dataset.triedJpeg) {
+            img.dataset.triedJpeg = "true";
+            img.src = "/static/images/" + player.toLowerCase() + ".jpeg";
         } else {
-            button.disabled = !currentPerson || spinning || gameOver;
-            button.onclick = () => selectAttribute(attribute);
+            img.classList.add("missing");
         }
+    };
+    const name = document.createElement("div");
+    name.className = "player-name";
+    name.textContent = player;
+    const state = document.createElement("small");
+    state.textContent = buildHasPlayer(player) ? "Drafted" : "Available";
+    card.append(img, name, state);
+    return card;
+}
 
-        container.appendChild(button);
+function buildHasPlayer(player) {
+    return Object.values(build).includes(player);
+}
+
+function renderPlayerPool() {
+    const pool = $("playerPool");
+    pool.replaceChildren();
+    players.forEach(player => {
+        const card = createPlayerCard(player);
+        if (buildHasPlayer(player)) card.style.opacity = "0.45";
+        pool.append(card);
     });
 }
 
-function updateCurrentPlayer(person) {
-    $("currentPerson").textContent = person;
-    $("currentPhoto").style.visibility = "visible";
-    $("currentPhoto").src = photoPath(person);
-    $("currentPhoto").alt = person + " photo";
-    $("currentHeight").textContent =
-        "Height: " + actualHeights[person] +
-        " · Height OVR: " + heightToOvr(actualHeights[person]);
+function renderAssignments() {
+    const container = $("assignments");
+    container.replaceChildren();
+
+    if (!Object.keys(build).length) {
+        const p = document.createElement("p");
+        p.className = "muted";
+        p.textContent = "Your assigned players will appear here.";
+        container.append(p);
+        return;
+    }
+
+    attributes.forEach(attribute => {
+        if (!build[attribute]) return;
+        const card = document.createElement("div");
+        card.className = "attribute-card";
+        const title = document.createElement("strong");
+        title.textContent = attribute;
+        const player = document.createElement("div");
+        player.textContent = build[attribute];
+        const value = document.createElement("div");
+        value.className = "green";
+        value.textContent = rating(build[attribute], attribute) + " OVR";
+        card.append(title, player, value);
+        container.append(card);
+    });
 }
 
-function spinWheel() {
-    if (spinning || currentPerson || !remainingPeople.length || gameOver) return;
+function updateRound() {
+    $("roundNumber").textContent = Math.min(round + 1, 7);
+    $("currentAttribute").textContent = attributes[round] || "Draft complete";
+}
+
+function calculateScores() {
+    const values = attributes.map(attribute => rating(build[attribute], attribute));
+    const overall = Math.round(values.reduce((sum, value) => sum + value, 0) / 7);
+    const average = list => Math.round(list.reduce((sum, attribute) =>
+        sum + rating(build[attribute], attribute), 0) / list.length);
+
+    return {
+        overall,
+        money: average(["Smarts", "Kindliness", "Humorous", "Manners"]),
+        fuhed: average(["Build", "Humorous", "Manners", "Height"])
+    };
+}
+
+function finishDraft() {
+    const scores = calculateScores();
+    $("overallScore").textContent = scores.overall;
+    $("moneyScore").textContent = scores.money;
+    $("fuhedScore").textContent = scores.fuhed;
+    $("resultsPanel").hidden = false;
+    $("spinButton").disabled = true;
+    $("currentAttribute").textContent = "Draft complete!";
+    $("status").textContent = "All seven attributes have been assigned. Two players remain undrafted.";
+    renderAssignments();
+    renderPlayerPool();
+    loadLeaderboard();
+}
+
+function spin() {
+    if (spinning || round >= attributes.length) return;
+    if (availablePlayers.length === 0) return;
 
     spinning = true;
     $("spinButton").disabled = true;
-    $("spinButton").textContent = "🎰 SPINNING...";
-    renderAttributes();
-    playSound("spin");
-
-    const selectedIndex = Math.floor(Math.random() * remainingPeople.length);
-    const selected = remainingPeople[selectedIndex];
-    const reels = [$("reel1"), $("reel2"), $("reel3")];
-
-    reels.forEach(reel => reel.classList.add("spinning"));
+    $("status").textContent = "The reels are spinning…";
+    const attribute = attributes[round];
+    const winnerIndex = Math.floor(Math.random() * availablePlayers.length);
+    const winner = availablePlayers[winnerIndex];
 
     let ticks = 0;
-    const totalTicks = 24;
+    const maxTicks = 16 + Math.floor(Math.random() * 8);
+    const reelIds = ["reel1", "reel2", "reel3"];
 
-    function tick() {
-        const randomPerson = people[Math.floor(Math.random() * people.length)];
-
-        reels.forEach((reel, index) => {
-            reel.textContent = index === 1 && ticks > totalTicks - 4
-                ? selected
-                : people[Math.floor(Math.random() * people.length)];
+    const timer = setInterval(() => {
+        reelIds.forEach((id, index) => {
+            const name = players[Math.floor(Math.random() * players.length)];
+            $(id).textContent = index === 1 ? name : players[Math.floor(Math.random() * players.length)];
         });
-
+        playTone(300 + Math.random() * 500, 0.035, "square");
         ticks++;
 
-        if (ticks < totalTicks) {
-            setTimeout(tick, 65 + ticks * 7);
-        } else {
-            reels[0].textContent = "★";
-            reels[1].textContent = selected.toUpperCase();
-            reels[2].textContent = "★";
-            reels.forEach(reel => reel.classList.remove("spinning"));
+        if (ticks >= maxTicks) {
+            clearInterval(timer);
+            build[attribute] = winner;
+            availablePlayers = availablePlayers.filter(player => player !== winner);
 
-            currentPerson = selected;
+            $("reel1").textContent = attribute;
+            $("reel2").textContent = winner;
+            $("reel3").textContent = rating(winner, attribute) + " OVR";
+
+            playTone(760, 0.18);
+            $("status").textContent = winner + " gets " + attribute + " with " + rating(winner, attribute) + " OVR!";
+            round++;
+            renderAssignments();
+            renderPlayerPool();
+            updateRound();
             spinning = false;
-            updateCurrentPlayer(selected);
-            $("currentOvr").textContent = "--";
-            playSound("select");
 
-            if (usedAttributes.length === attributes.length) {
-                $("message").textContent =
-                    "All seven attributes are taken. This player gets no attribute.";
-                finishTurn(null);
+            if (round === attributes.length) {
+                finishDraft();
             } else {
-                $("message").textContent =
-                    "Player selected! Choose one available attribute.";
-                $("spinButton").textContent = "PLAYER SELECTED";
-                renderAttributes();
+                $("spinButton").disabled = false;
+                $("spinButton").textContent = "SPIN FOR " + attributes[round].toUpperCase();
             }
         }
-    }
-
-    tick();
+    }, 85);
 }
 
-function selectAttribute(attribute) {
-    if (!currentPerson || usedAttributes.includes(attribute) || spinning || gameOver) return;
-    playSound("attribute");
-    finishTurn(attribute);
+function resetDraft() {
+    round = 0;
+    build = {};
+    availablePlayers = [...players];
+    spinning = false;
+    $("resultsPanel").hidden = true;
+    $("submitStatus").textContent = "";
+    $("leaderboardName").value = "";
+    $("spinButton").disabled = false;
+    $("spinButton").textContent = "SPIN";
+    $("reel1").textContent = "Ready";
+    $("reel2").textContent = "Set";
+    $("reel3").textContent = "Draft";
+    $("status").textContent = "Press SPIN to start.";
+    updateRound();
+    renderAssignments();
+    renderPlayerPool();
 }
 
-function finishTurn(attribute) {
-    const person = currentPerson;
-    if (!person) return;
-
-    let score = null;
-
-    if (attribute !== null) {
-        score = getRating(person, attribute);
-
-        if (!Number.isFinite(score)) {
-            $("message").textContent = "Could not calculate the selected rating.";
-            return;
-        }
-
-        usedAttributes.push(attribute);
-        assignments[attribute] = { person, score };
-        totalScore += score;
-        $("currentOvr").textContent = score;
-    } else {
-        $("currentOvr").textContent = "--";
-    }
-
-    remainingPeople = remainingPeople.filter(name => name !== person);
-    turn++;
-    currentPerson = null;
-
-    $("score").textContent = totalScore;
-    $("scoreLabel").textContent =
-        `${usedAttributes.length} of 7 attributes assigned · Total points so far`;
-    $("progress").style.width = `${(turn / people.length) * 100}%`;
-
-    const roster = $("roster");
-    if (turn === 1) roster.innerHTML = "";
-
-    const entry = document.createElement("div");
-    entry.className = "roster-item" + (attribute === null ? " unassigned" : "");
-
-    const photo = document.createElement("img");
-    photo.className = "roster-photo";
-    photo.src = photoPath(person);
-    photo.alt = person;
-    photo.onerror = () => { photo.style.visibility = "hidden"; };
-    entry.appendChild(photo);
-
-    const details = document.createElement("div");
-    const name = document.createElement("strong");
-    name.textContent = person;
-    details.appendChild(name);
-
-    const line = document.createElement("div");
-    line.textContent = attribute === null
-        ? "No attribute assigned"
-        : attribute === "Height"
-            ? `Height: ${actualHeights[person]} · ${score} OVR`
-            : `${attribute}: ${score} OVR`;
-
-    details.appendChild(line);
-    entry.appendChild(details);
-    roster.appendChild(entry);
-
-    if (turn === 9) {
-        gameOver = true;
-        showFinalResults();
-    } else {
-        $("turn").textContent = `Turn ${turn + 1} of 9`;
-        $("message").textContent = attribute === null
-            ? "No attributes remain. Spin for the next player."
-            : "Pick saved! Spin for the next player.";
-        $("spinButton").textContent = "🎰 SPIN FOR NEXT PLAYER";
-        $("spinButton").disabled = false;
-    }
-
-    renderAttributes();
-}
-
-function average(values) {
-    return Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
-}
-
-function showFinalResults() {
-    const finalOvr = average(Object.values(assignments).map(item => item.score));
-
-    const moneyAttributes = ["Smarts", "Kindliness", "Humorous", "Manners"];
-    const fuhedAttributes = ["Build", "Humorous", "Manners", "Height"];
-
-    const moneyValues = moneyAttributes
-        .filter(attribute => assignments[attribute])
-        .map(attribute => assignments[attribute].score);
-
-    const fuhedValues = fuhedAttributes
-        .filter(attribute => assignments[attribute])
-        .map(attribute => assignments[attribute].score);
-
-    const money = average(moneyValues);
-    const fuhed = average(fuhedValues);
-
-    $("finalOvr").textContent = finalOvr;
-    $("moneyScore").textContent = money;
-    $("fuhedScore").textContent = fuhed;
-    $("turn").textContent = "DRAFT COMPLETE!";
-    $("spinButton").textContent = "GAME COMPLETE";
-    $("spinButton").disabled = true;
-    $("message").textContent = "Your build is complete!";
-    $("currentPerson").textContent = "FINAL BUILD";
-    $("currentHeight").textContent = `Average OVR: ${finalOvr}`;
-    $("resultDescription").textContent =
-        `Money is based on your available Smarts, Kindliness, Humorous, and Manners ratings. ` +
-        `Bih's Fuhed is based on your available Build, Humorous, Manners, and Height OVR ratings.`;
-
-    $("resultsPanel").classList.remove("hidden");
-    $("resultsPanel").scrollIntoView({ behavior: "smooth", block: "start" });
-    playSound("finish");
-}
-
-/* These endpoints will be added to app.py in the next step. */
 async function loadLeaderboard() {
-    const container = $("leaderboard");
-    container.innerHTML = '<p class="small-note">Loading leaderboard...</p>';
-
+    $("leaderboardStatus").textContent = "Loading leaderboard…";
     try {
         const response = await fetch("/api/leaderboard");
-        if (!response.ok) throw new Error("Leaderboard server not set up");
+        if (!response.ok) throw new Error("Could not load leaderboard");
+        const rows = await response.json();
+        const tbody = $("leaderboardRows");
+        tbody.replaceChildren();
 
-        const data = await response.json();
-        const entries = Array.isArray(data) ? data : data.leaderboard;
-
-        if (!Array.isArray(entries) || entries.length === 0) {
-            container.innerHTML = '<p class="small-note">No scores yet. Be the first!</p>';
-            return;
-        }
-
-        container.innerHTML = "";
-
-        const header = document.createElement("div");
-        header.className = "leaderboard-row leaderboard-head";
-        ["#", "NAME", "OVR", "MONEY", "BIH'S FUHED"].forEach(text => {
-            const cell = document.createElement("div");
-            cell.textContent = text;
-            header.appendChild(cell);
-        });
-        container.appendChild(header);
-
-        entries.forEach((item, index) => {
-            const row = document.createElement("div");
-            row.className = "leaderboard-row";
-            [index + 1, item.name, item.ovr, item.money, item.fuhed].forEach(value => {
-                const cell = document.createElement("div");
-                cell.textContent = value;
-                row.appendChild(cell);
+        if (!rows.length) {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colSpan = 5;
+            td.textContent = "No scores yet. Complete a draft and submit the first score!";
+            tr.append(td);
+            tbody.append(tr);
+        } else {
+            rows.forEach((entry, index) => {
+                const tr = document.createElement("tr");
+                [index + 1, entry.name, entry.overall, entry.money, entry.fuhed].forEach(value => {
+                    const td = document.createElement("td");
+                    td.textContent = value;
+                    tr.append(td);
+                });
+                tbody.append(tr);
             });
-            container.appendChild(row);
-        });
+        }
+        $("leaderboardStatus").textContent = "Leaderboard updated.";
     } catch (error) {
-        container.innerHTML =
-            '<p class="small-note">The shared leaderboard needs its server setup. We will connect it next.</p>';
+        $("leaderboardStatus").textContent = "Could not load leaderboard. Check that the server has deployed successfully.";
     }
 }
 
-$("leaderboardForm").addEventListener("submit", async event => {
-    event.preventDefault();
+async function submitScore() {
+    const name = $("leaderboardName").value.trim();
+    if (!name || name.length > 24) {
+        $("submitStatus").textContent = "Enter a name between 1 and 24 characters.";
+        return;
+    }
+    if (round !== 7 || Object.keys(build).length !== 7) {
+        $("submitStatus").textContent = "Complete all seven attributes first.";
+        return;
+    }
 
-    const name = $("playerName").value.trim();
-    if (!name) return;
-
-    const entry = {
-        name,
-        ovr: Number($("finalOvr").textContent),
-        money: Number($("moneyScore").textContent),
-        fuhed: Number($("fuhedScore").textContent)
-    };
-
-    $("submitScoreButton").disabled = true;
-    $("submitMessage").textContent = "Submitting score...";
+    const scores = calculateScores();
+    $("submitButton").disabled = true;
+    $("submitStatus").textContent = "Submitting score…";
 
     try {
         const response = await fetch("/api/leaderboard", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(entry)
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                name,
+                build,
+                overall: scores.overall,
+                money: scores.money,
+                fuhed: scores.fuhed
+            })
         });
-
         const result = await response.json();
-
         if (!response.ok) throw new Error(result.error || "Submission failed");
 
-        $("submitMessage").textContent = "Score submitted! Check the leaderboard.";
-        $("playerName").disabled = true;
-        $("submitScoreButton").textContent = "SCORE SUBMITTED";
-        loadLeaderboard();
+        $("submitStatus").textContent = "Score submitted successfully!";
+        await loadLeaderboard();
     } catch (error) {
-        $("submitMessage").textContent =
-            "Leaderboard server is not connected yet. Your build is safe; we will set up score storage next.";
-        $("submitScoreButton").disabled = false;
+        $("submitStatus").textContent = error.message;
+    } finally {
+        $("submitButton").disabled = false;
     }
-});
-
-function restartGame() {
-    remainingPeople = [...people];
-    usedAttributes = [];
-    assignments = {};
-    currentPerson = null;
-    totalScore = 0;
-    turn = 0;
-    spinning = false;
-    gameOver = false;
-
-    $("turn").textContent = "Turn 1 of 9";
-    $("score").textContent = "0";
-    $("scoreLabel").textContent = "Total points so far · 7 attributes available";
-    $("progress").style.width = "0%";
-    $("currentOvr").textContent = "--";
-    $("currentPerson").textContent = "Ready to draft?";
-    $("currentPhoto").src = photoPath("Max");
-    $("currentPhoto").style.visibility = "visible";
-    $("currentHeight").textContent = "Spin to select a player";
-    $("message").textContent = "Spin the machine to reveal your first player.";
-
-    $("reel1").textContent = "FTFG";
-    $("reel2").textContent = "DRAFT";
-    $("reel3").textContent = "TIME";
-    $("roster").innerHTML = '<p class="status">Your drafted players will appear here.</p>';
-
-    $("resultsPanel").classList.add("hidden");
-    $("playerName").value = "";
-    $("playerName").disabled = false;
-    $("submitScoreButton").disabled = false;
-    $("submitScoreButton").textContent = "SUBMIT MY SCORE";
-    $("submitMessage").textContent = "";
-
-    $("spinButton").textContent = "🎰 SPIN FOR A PLAYER";
-    $("spinButton").disabled = false;
-
-    renderAttributes();
-    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-renderAttributes();
+$("spinButton").addEventListener("click", spin);
+$("resetButton").addEventListener("click", resetDraft);
+$("submitButton").addEventListener("click", submitScore);
+$("refreshButton").addEventListener("click", loadLeaderboard);
+$("soundButton").addEventListener("click", () => {
+    soundEnabled = !soundEnabled;
+    $("soundButton").textContent = "Sound: " + (soundEnabled ? "ON" : "OFF");
+    if (soundEnabled) playTone(600, 0.08);
+});
+
+renderPlayerPool();
+renderAssignments();
+updateRound();
 loadLeaderboard();
 </script>
 </body>
