@@ -7,130 +7,159 @@
 <title>FTFG | Attribute Draft</title>
 
 <style>
-* {
-    box-sizing: border-box;
+:root {
+    --green: #66e39a;
+    --navy: #0b0f17;
+    --panel: #151e2c;
+    --border: #344258;
+    --muted: #b8c5d8;
 }
+
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
-    padding: 24px;
-    background: radial-gradient(circle at top, #202b3e 0%, #0b0f17 65%);
+    padding: 20px;
+    background: radial-gradient(circle at top, #202b3e, var(--navy) 70%);
     color: #f4f7fb;
     font-family: Arial, sans-serif;
     text-align: center;
 }
 
-.game {
-    max-width: 950px;
-    margin: auto;
-}
+.game { max-width: 1000px; margin: auto; }
 
 h1 {
-    color: #66e39a;
-    font-size: clamp(28px, 5vw, 42px);
+    color: var(--green);
+    font-size: clamp(28px, 5vw, 44px);
     font-weight: 900;
     letter-spacing: 2px;
-    text-transform: uppercase;
-    text-shadow: 0 0 18px rgba(102, 227, 154, 0.25);
+    text-shadow: 0 0 20px #66e39a35;
 }
 
-h2 {
-    margin-top: 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
+h2 { text-transform: uppercase; letter-spacing: 1px; }
 
-.subtitle, .status {
-    color: #b8c5d8;
+.subtitle, .status, .score-label {
+    color: var(--muted);
     line-height: 1.6;
 }
 
 .panel {
     background: linear-gradient(145deg, #1c2636, #111925);
-    border: 1px solid #344258;
+    border: 1px solid var(--border);
     border-radius: 18px;
     padding: 24px;
     margin: 20px 0;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 12px 30px #0004;
 }
 
-.wheel-container {
-    position: relative;
-    width: 280px;
-    height: 280px;
-    margin: 24px auto;
-}
-
-.pointer {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    color: #66e39a;
-    font-size: 30px;
-}
-
-#wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 6px solid white;
-    position: relative;
-    background: conic-gradient(
-        #16a34a 0deg 40deg,
-        #2563eb 40deg 80deg,
-        #9333ea 80deg 120deg,
-        #ea580c 120deg 160deg,
-        #0891b2 160deg 200deg,
-        #be123c 200deg 240deg,
-        #ca8a04 240deg 280deg,
-        #4f46e5 280deg 320deg,
-        #0f766e 320deg 360deg
-    );
-    transition: transform 3s cubic-bezier(.12,.75,.18,1);
-}
-
-.wheel-center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 76px;
-    height: 76px;
-    border-radius: 50%;
-    background: #101722;
-    border: 4px solid white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    color: #66e39a;
+button, input {
+    font: inherit;
 }
 
 button {
     border: none;
     border-radius: 10px;
     padding: 13px 18px;
-    font-size: 15px;
     font-weight: bold;
     cursor: pointer;
     margin: 5px;
     transition: transform .15s, opacity .15s;
 }
 
-button:not(:disabled):hover {
-    transform: translateY(-2px);
-}
+button:not(:disabled):hover { transform: translateY(-2px); }
+button:disabled { opacity: .35; cursor: not-allowed; }
 
 .primary {
-    background: #66e39a;
+    background: var(--green);
     color: #101722;
 }
 
-button:disabled {
-    opacity: .35;
-    cursor: not-allowed;
+.secondary {
+    background: #29364a;
+    border: 1px solid #465671;
+    color: white;
+}
+
+.sound-toggle {
+    float: right;
+    background: #29364a;
+    color: white;
+    border: 1px solid #465671;
+}
+
+.progress-track {
+    height: 8px;
+    background: #303b4e;
+    border-radius: 10px;
+    overflow: hidden;
+    max-width: 500px;
+    margin: 16px auto;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--green);
+    transition: width .3s;
+}
+
+/* SLOT MACHINE */
+
+.machine {
+    max-width: 620px;
+    margin: 25px auto;
+    padding: 18px;
+    border: 3px solid #5b708b;
+    border-radius: 24px;
+    background: linear-gradient(145deg, #26364d, #080d15);
+    box-shadow: 0 0 25px #66e39a15, inset 0 0 20px #0008;
+}
+
+.machine-top {
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 5px;
+    margin-bottom: 14px;
+}
+
+.reels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.reel {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 3px solid #63748a;
+    background: linear-gradient(#e9eef6, #aab8c9);
+    color: #101722;
+    font-size: clamp(13px, 2.8vw, 20px);
+    font-weight: 900;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+}
+
+.reel.spinning {
+    animation: reelFlash .12s infinite alternate;
+}
+
+@keyframes reelFlash {
+    from { background: #e9eef6; }
+    to { background: #baf8d1; }
+}
+
+.machine-bottom {
+    color: #a8b6c9;
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin-top: 14px;
 }
 
 .person-card {
@@ -143,30 +172,39 @@ button:disabled {
     border-radius: 16px;
     padding: 18px;
     margin: 18px auto;
-    max-width: 460px;
+    max-width: 500px;
+}
+
+.player-photo {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 3px solid var(--green);
+    background: #29364a;
 }
 
 .ovr-badge {
-    min-width: 90px;
+    min-width: 85px;
     padding: 12px;
     border-radius: 12px;
-    background: linear-gradient(145deg, #66e39a, #159957);
+    background: linear-gradient(145deg, var(--green), #159957);
     color: #07120c;
-    font-size: 36px;
+    font-size: 34px;
     font-weight: 900;
 }
 
 .ovr-badge small {
     display: block;
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 2px;
 }
 
 .person {
-    font-size: 28px;
+    font-size: 27px;
     font-weight: 900;
     margin: 8px;
-    color: #66e39a;
+    color: var(--green);
 }
 
 .attributes {
@@ -184,7 +222,7 @@ button:disabled {
 
 .attribute:not(:disabled):hover {
     background: #36516b;
-    border-color: #66e39a;
+    border-color: var(--green);
 }
 
 .attribute.used {
@@ -194,31 +232,12 @@ button:disabled {
 }
 
 .score {
-    font-size: clamp(40px, 8vw, 60px);
-    color: #66e39a;
+    font-size: clamp(42px, 8vw, 68px);
+    color: var(--green);
     font-weight: 900;
 }
 
-.score-label {
-    color: #b8c5d8;
-    margin-top: 0;
-}
-
-.progress-track {
-    height: 8px;
-    background: #303b4e;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 16px auto;
-    max-width: 500px;
-}
-
-.progress-fill {
-    height: 100%;
-    width: 0%;
-    background: #66e39a;
-    transition: width .3s;
-}
+.score-label { margin-top: 0; }
 
 #roster {
     display: grid;
@@ -228,19 +247,80 @@ button:disabled {
 }
 
 .roster-item {
-    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
     background: #202c3e;
     border: 1px solid #35455d;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow-wrap: anywhere;
 }
 
-.roster-item strong {
-    color: #66e39a;
+.roster-photo {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 9px;
+    flex-shrink: 0;
 }
 
-.roster-item.unassigned strong {
-    color: #f0bc66;
+.roster-item strong { color: var(--green); }
+.roster-item.unassigned strong { color: #f0bc66; }
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.result-card {
+    padding: 18px 8px;
+    border: 1px solid #40516a;
+    border-radius: 14px;
+    background: #101722;
+}
+
+.result-number {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 900;
+    color: var(--green);
+}
+
+.result-name {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.field {
+    width: 100%;
+    max-width: 400px;
+    padding: 13px;
+    border: 1px solid #52637b;
+    border-radius: 9px;
+    background: #0b0f17;
+    color: white;
+    margin: 8px 0;
+}
+
+.leaderboard-row {
+    display: grid;
+    grid-template-columns: 45px 1fr 70px 75px 90px;
+    gap: 8px;
+    align-items: center;
+    text-align: left;
+    padding: 12px 6px;
+    border-bottom: 1px solid #344258;
+    font-size: 13px;
+}
+
+.leaderboard-row:first-child { color: var(--green); }
+.leaderboard-head {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: bold;
 }
 
 .small-note {
@@ -248,36 +328,22 @@ button:disabled {
     font-size: 13px;
 }
 
-@media(max-width: 480px) {
-    body {
-        padding: 12px;
-    }
+.hidden { display: none !important; }
 
-    .panel {
-        padding: 16px;
-    }
-
-    .wheel-container {
-        width: 240px;
-        height: 240px;
-    }
-
-    .person-card {
-        gap: 12px;
-        padding: 12px;
-    }
-
-    .ovr-badge {
-        min-width: 70px;
-        font-size: 30px;
-    }
-
-    .person {
-        font-size: 23px;
-    }
-
-    #roster {
-        grid-template-columns: 1fr;
+@media(max-width: 520px) {
+    body { padding: 10px; }
+    .panel { padding: 14px; }
+    .person-card { gap: 10px; padding: 10px; flex-wrap: wrap; }
+    .player-photo { width: 90px; height: 90px; }
+    .ovr-badge { min-width: 65px; font-size: 28px; }
+    .person { font-size: 22px; }
+    #roster { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr; }
+    .result-card { padding: 12px; }
+    .leaderboard-row {
+        grid-template-columns: 28px 1fr 48px 58px 66px;
+        gap: 4px;
+        font-size: 11px;
     }
 }
 </style>
@@ -285,10 +351,12 @@ button:disabled {
 
 <body>
 <main class="game">
+    <button class="sound-toggle" id="soundButton" onclick="toggleSound()">
+        🔊 SOUND ON
+    </button>
+
     <h1>FTFG Attribute Draft</h1>
-    <p class="subtitle">
-        Nine players. Seven attributes. Draft your best team.
-    </p>
+    <p class="subtitle">Nine players. Seven attributes. Draft your best build.</p>
 
     <section class="panel">
         <h2>Player Selection</h2>
@@ -298,213 +366,231 @@ button:disabled {
             <div class="progress-fill" id="progress"></div>
         </div>
 
-        <div class="wheel-container">
-            <div class="pointer">▼</div>
-            <div id="wheel">
-                <div class="wheel-center">FTFG</div>
+        <div class="machine">
+            <div class="machine-top">★ FTFG JACKPOT ★</div>
+            <div class="reels">
+                <div class="reel" id="reel1">FTFG</div>
+                <div class="reel" id="reel2">DRAFT</div>
+                <div class="reel" id="reel3">TIME</div>
             </div>
+            <div class="machine-bottom">SPIN • SELECT • BUILD</div>
         </div>
 
         <button class="primary" id="spinButton" onclick="spinWheel()">
-            SPIN FOR A PLAYER
+            🎰 SPIN FOR A PLAYER
         </button>
 
         <div class="person-card">
+            <img class="player-photo" id="currentPhoto"
+                 src="/static/images/max.jpg" alt="Player photo"
+                 onerror="this.style.visibility='hidden'">
+
             <div class="ovr-badge">
                 <span id="currentOvr">--</span>
                 <small>OVR</small>
             </div>
+
             <div>
                 <div class="person" id="currentPerson">Ready to draft?</div>
-                <p id="currentHeight" class="status">
-                    Spin to select a player
-                </p>
+                <p id="currentHeight" class="status">Spin to select a player</p>
             </div>
         </div>
 
-        <p class="status" id="message">
-            Spin the wheel to reveal your first player.
-        </p>
+        <p class="status" id="message">Spin the machine to reveal your first player.</p>
     </section>
 
     <section class="panel">
         <h2>Choose an Attribute</h2>
-        <p class="status">
-            Each attribute can only be used once.
-        </p>
+        <p class="status">Each attribute can only be used once.</p>
         <div class="attributes" id="attributes"></div>
         <p class="small-note">
-            Ratings range from 1 to 99 OVR. Height is calculated from actual height.
+            Height OVR is based on actual height. All other ratings range from 1–99.
         </p>
     </section>
 
     <section class="panel">
-        <h2>Your Draft Score</h2>
+        <h2>Live Draft Score</h2>
         <div class="score" id="score">0</div>
-        <p class="score-label">Total OVR points · Maximum 693</p>
+        <p class="score-label" id="scoreLabel">Total points so far · 7 attributes available</p>
 
         <h2>Your Draft Board</h2>
         <div id="roster">
             <p class="status">Your drafted players will appear here.</p>
         </div>
+    </section>
 
-        <div id="restartContainer" style="display:none; margin-top:20px;">
-            <button class="primary" onclick="restartGame()">
-                PLAY AGAIN
-            </button>
+    <section class="panel hidden" id="resultsPanel">
+        <h2>🏆 Your Final Build</h2>
+        <p class="status">Your seven drafted attributes decide your scores.</p>
+
+        <div class="results-grid">
+            <div class="result-card">
+                <div class="result-number" id="finalOvr">0</div>
+                <div class="result-name">Average OVR</div>
+            </div>
+            <div class="result-card">
+                <div class="result-number" id="moneyScore">0</div>
+                <div class="result-name">Money</div>
+            </div>
+            <div class="result-card">
+                <div class="result-number" id="fuhedScore">0</div>
+                <div class="result-name">Bih's Fuhed</div>
+            </div>
         </div>
+
+        <p class="status" id="resultDescription"></p>
+
+        <h2>Join the Leaderboard</h2>
+        <p class="status">Enter your name to submit your build.</p>
+        <form id="leaderboardForm">
+            <input class="field" id="playerName" maxlength="24"
+                   placeholder="Enter your name" required>
+            <br>
+            <button class="primary" type="submit" id="submitScoreButton">
+                SUBMIT MY SCORE
+            </button>
+        </form>
+        <p class="status" id="submitMessage"></p>
+    </section>
+
+    <section class="panel" id="leaderboardPanel">
+        <h2>🌎 FTFG Leaderboard</h2>
+        <p class="status">Compare your build with other players.</p>
+        <div id="leaderboard">
+            <p class="small-note">
+                The shared leaderboard will activate after the server setup is complete.
+            </p>
+        </div>
+        <button class="secondary" onclick="loadLeaderboard()">REFRESH LEADERBOARD</button>
+    </section>
+
+    <section class="panel">
+        <button class="primary" onclick="restartGame()">PLAY AGAIN</button>
     </section>
 </main>
 
 <script>
-// Ratings converted from the original 1–10 scale.
-// These are starter ratings and can be customized later.
-
 const ratings = {
-    "Max": {
-        Build: 70,
-        Smarts: 99,
-        Athleticism: 94,
-        Kindliness: 91,
-        Humorous: 82,
-        Manners: 93
-    },
-    "Quinn": {
-        Build: 89,
-        Smarts: 88,
-        Athleticism: 95,
-        Kindliness: 81,
-        Humorous: 88,
-        Manners: 85
-    },
-    "Chase": {
-        Build: 75,
-        Smarts: 95,
-        Athleticism: 83,
-        Kindliness: 89,
-        Humorous: 83,
-        Manners: 80
-    },
-    "Will": {
-        Build: 95,
-        Smarts: 83,
-        Athleticism: 88,
-        Kindliness: 94,
-        Humorous: 90,
-        Manners: 94
-    },
-    "Walter": {
-        Build: 80,
-        Smarts: 99,
-        Athleticism: 87,
-        Kindliness: 97,
-        Humorous: 91,
-        Manners: 81
-    },
-    "Connor": {
-        Build: 96,
-        Smarts: 79,
-        Athleticism: 85,
-        Kindliness: 80,
-        Humorous: 98,
-        Manners: 61
-    },
-    "Noah": {
-        Build: 73,
-        Smarts: 86,
-        Athleticism: 93,
-        Kindliness: 85,
-        Humorous: 93,
-        Manners: 85
-    },
-    "Jaden": {
-        Build: 96,
-        Smarts: 80,
-        Athleticism: 94,
-        Kindliness: 96,
-        Humorous: 90,
-        Manners: 95
-    },
-    "Jackson": {
-        Build: 86,
-        Smarts: 96,
-        Athleticism: 85,
-        Kindliness: 89,
-        Humorous: 90,
-        Manners: 89
-    }
+    "Max": {Build:70, Smarts:99, Athleticism:94, Kindliness:91, Humorous:82, Manners:93},
+    "Quinn": {Build:89, Smarts:88, Athleticism:95, Kindliness:81, Humorous:88, Manners:85},
+    "Chase": {Build:75, Smarts:95, Athleticism:83, Kindliness:89, Humorous:83, Manners:80},
+    "Will": {Build:95, Smarts:83, Athleticism:88, Kindliness:94, Humorous:90, Manners:94},
+    "Walter": {Build:80, Smarts:99, Athleticism:87, Kindliness:97, Humorous:91, Manners:81},
+    "Connor": {Build:96, Smarts:79, Athleticism:85, Kindliness:80, Humorous:98, Manners:61},
+    "Noah": {Build:73, Smarts:86, Athleticism:93, Kindliness:85, Humorous:93, Manners:85},
+    "Jaden": {Build:96, Smarts:80, Athleticism:94, Kindliness:96, Humorous:90, Manners:95},
+    "Jackson": {Build:86, Smarts:96, Athleticism:85, Kindliness:89, Humorous:90, Manners:89}
 };
 
 const actualHeights = {
-    "Max": "6'0\"",
-    "Quinn": "6'3\"",
-    "Chase": "5'11\"",
-    "Will": "5'11\"",
-    "Walter": "6'5\"",
-    "Connor": "5'11\"",
-    "Noah": "6'0\"",
-    "Jaden": "5'8\"",
-    "Jackson": "5'9\""
+    "Max": "6'0\"", "Quinn": "6'3\"", "Chase": "5'11\"",
+    "Will": "5'11\"", "Walter": "6'5\"", "Connor": "5'11\"",
+    "Noah": "6'0\"", "Jaden": "5'8\"", "Jackson": "5'9\""
 };
-
 
 const people = Object.keys(ratings);
 const attributes = [
-    "Height",
-    "Build",
-    "Smarts",
-    "Athleticism",
-    "Kindliness",
-    "Humorous",
-    "Manners"
+    "Height", "Build", "Smarts", "Athleticism",
+    "Kindliness", "Humorous", "Manners"
 ];
+
+const photoFiles = {
+    Max: "max.jpg",
+    Quinn: "quinn.jpg",
+    Chase: "chase.jpg",
+    Will: "will.jpg",
+    Walter: "walter.jpg",
+    Connor: "connor.jpg",
+    Noah: "noah.jpg",
+    Jaden: "jaden.jpg",
+    Jackson: "jackson.jpg"
+};
 
 let remainingPeople = [...people];
 let usedAttributes = [];
+let assignments = {};
 let currentPerson = null;
 let totalScore = 0;
 let turn = 0;
 let spinning = false;
-let rotation = 0;
 let gameOver = false;
+let soundOn = true;
+let audioContext = null;
 
-const wheel = document.getElementById("wheel");
-const spinButton = document.getElementById("spinButton");
+const $ = id => document.getElementById(id);
 
 function heightToOvr(height) {
     const match = height.match(/^(\d+)'(\d+)"$/);
     if (!match) return null;
 
-    const totalInches = Number(match[1]) * 12 + Number(match[2]);
-    const sixFiveInches = 6 * 12 + 5;
-
-    return Math.max(
-        1,
-        Math.min(99, 99 - (sixFiveInches - totalInches) * 3)
-    );
+    const inches = Number(match[1]) * 12 + Number(match[2]);
+    return Math.max(1, Math.min(99, 99 - (77 - inches) * 3));
 }
 
 function getRating(person, attribute) {
-    if (attribute === "Height") {
-        return heightToOvr(actualHeights[person]);
-    }
+    return attribute === "Height"
+        ? heightToOvr(actualHeights[person])
+        : ratings[person][attribute];
+}
 
-    return ratings[person][attribute];
+function photoPath(person) {
+    return "/static/images/" + photoFiles[person];
+}
+
+/* Sound effects use the browser's built-in audio generator. */
+function playSound(type) {
+    if (!soundOn) return;
+
+    try {
+        audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext.state === "suspended") audioContext.resume();
+
+        const now = audioContext.currentTime;
+        const notes = type === "spin" ? [330, 390] :
+                      type === "select" ? [520, 760] :
+                      type === "attribute" ? [440, 660] :
+                      [523, 659, 784, 1046];
+
+        notes.forEach((frequency, i) => {
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            oscillator.type = type === "spin" ? "square" : "sine";
+            oscillator.frequency.value = frequency;
+            gain.gain.setValueAtTime(0.0001, now + i * 0.09);
+            gain.gain.exponentialRampToValueAtTime(0.12, now + i * 0.09 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.09 + 0.16);
+
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+            oscillator.start(now + i * 0.09);
+            oscillator.stop(now + i * 0.09 + 0.18);
+        });
+    } catch (error) {
+        // The game still works if audio is unavailable.
+    }
+}
+
+function toggleSound() {
+    soundOn = !soundOn;
+    $("soundButton").textContent = soundOn ? "🔊 SOUND ON" : "🔇 SOUND OFF";
+    if (soundOn) playSound("select");
 }
 
 function renderAttributes() {
-    const container = document.getElementById("attributes");
+    const container = $("attributes");
     container.innerHTML = "";
 
     attributes.forEach(attribute => {
         const button = document.createElement("button");
         button.className = "attribute";
-        button.textContent = attribute;
+        button.textContent = usedAttributes.includes(attribute)
+            ? attribute + " ✓"
+            : attribute;
 
         if (usedAttributes.includes(attribute)) {
             button.disabled = true;
             button.classList.add("used");
-            button.textContent += " ✓";
         } else {
             button.disabled = !currentPerson || spinning || gameOver;
             button.onclick = () => selectAttribute(attribute);
@@ -514,72 +600,78 @@ function renderAttributes() {
     });
 }
 
+function updateCurrentPlayer(person) {
+    $("currentPerson").textContent = person;
+    $("currentPhoto").style.visibility = "visible";
+    $("currentPhoto").src = photoPath(person);
+    $("currentPhoto").alt = person + " photo";
+    $("currentHeight").textContent =
+        "Height: " + actualHeights[person] +
+        " · Height OVR: " + heightToOvr(actualHeights[person]);
+}
+
 function spinWheel() {
-    if (
-        spinning ||
-        currentPerson ||
-        remainingPeople.length === 0 ||
-        gameOver
-    ) {
-        return;
-    }
+    if (spinning || currentPerson || !remainingPeople.length || gameOver) return;
 
     spinning = true;
-    spinButton.disabled = true;
+    $("spinButton").disabled = true;
+    $("spinButton").textContent = "🎰 SPINNING...";
     renderAttributes();
+    playSound("spin");
 
-    const selectedIndex = Math.floor(
-        Math.random() * remainingPeople.length
-    );
-    const selectedPerson = remainingPeople[selectedIndex];
+    const selectedIndex = Math.floor(Math.random() * remainingPeople.length);
+    const selected = remainingPeople[selectedIndex];
+    const reels = [$("reel1"), $("reel2"), $("reel3")];
 
-    const sectionAngle = 360 / people.length;
-    const targetAngle =
-        360 - (selectedIndex * sectionAngle + sectionAngle / 2);
+    reels.forEach(reel => reel.classList.add("spinning"));
 
-    const currentAngle = ((rotation % 360) + 360) % 360;
-    const adjustment = (targetAngle - currentAngle + 360) % 360;
+    let ticks = 0;
+    const totalTicks = 24;
 
-    rotation += 360 * 5 + adjustment;
-    wheel.style.transform = `rotate(${rotation}deg)`;
+    function tick() {
+        const randomPerson = people[Math.floor(Math.random() * people.length)];
 
-    setTimeout(() => {
-        currentPerson = selectedPerson;
-        spinning = false;
+        reels.forEach((reel, index) => {
+            reel.textContent = index === 1 && ticks > totalTicks - 4
+                ? selected
+                : people[Math.floor(Math.random() * people.length)];
+        });
 
-        document.getElementById("currentPerson").textContent =
-            currentPerson;
+        ticks++;
 
-        document.getElementById("currentOvr").textContent = "--";
-
-        document.getElementById("currentHeight").textContent =
-            "Height: " + actualHeights[currentPerson];
-
-        if (usedAttributes.length === attributes.length) {
-            document.getElementById("message").textContent =
-                "All seven attributes are taken. This player gets no attribute.";
-
-            finishTurn(null);
+        if (ticks < totalTicks) {
+            setTimeout(tick, 65 + ticks * 7);
         } else {
-            document.getElementById("message").textContent =
-                "Choose one available attribute for this player.";
+            reels[0].textContent = "★";
+            reels[1].textContent = selected.toUpperCase();
+            reels[2].textContent = "★";
+            reels.forEach(reel => reel.classList.remove("spinning"));
 
-            spinButton.textContent = "PLAYER SELECTED";
-            renderAttributes();
+            currentPerson = selected;
+            spinning = false;
+            updateCurrentPlayer(selected);
+            $("currentOvr").textContent = "--";
+            playSound("select");
+
+            if (usedAttributes.length === attributes.length) {
+                $("message").textContent =
+                    "All seven attributes are taken. This player gets no attribute.";
+                finishTurn(null);
+            } else {
+                $("message").textContent =
+                    "Player selected! Choose one available attribute.";
+                $("spinButton").textContent = "PLAYER SELECTED";
+                renderAttributes();
+            }
         }
-    }, 3100);
+    }
+
+    tick();
 }
 
 function selectAttribute(attribute) {
-    if (
-        !currentPerson ||
-        usedAttributes.includes(attribute) ||
-        spinning ||
-        gameOver
-    ) {
-        return;
-    }
-
+    if (!currentPerson || usedAttributes.includes(attribute) || spinning || gameOver) return;
+    playSound("attribute");
     finishTurn(attribute);
 }
 
@@ -587,145 +679,240 @@ function finishTurn(attribute) {
     const person = currentPerson;
     if (!person) return;
 
-    let entryText;
     let score = null;
 
     if (attribute !== null) {
         score = getRating(person, attribute);
 
-        if (score === null || !Number.isFinite(score)) {
-            document.getElementById("message").textContent =
-                "Could not calculate this player's height rating. Check the height format.";
+        if (!Number.isFinite(score)) {
+            $("message").textContent = "Could not calculate the selected rating.";
             return;
         }
 
         usedAttributes.push(attribute);
+        assignments[attribute] = { person, score };
         totalScore += score;
-
-        if (attribute === "Height") {
-            entryText =
-                `${person} — Height: ${actualHeights[person]} (${score} OVR)`;
-        } else {
-            entryText = `${person} — ${attribute}: ${score} OVR`;
-        }
-
-        document.getElementById("currentOvr").textContent = score;
+        $("currentOvr").textContent = score;
     } else {
-        entryText = `${person} — No attribute available`;
-        document.getElementById("currentOvr").textContent = "--";
+        $("currentOvr").textContent = "--";
     }
-
-    document.getElementById("currentPerson").textContent = person;
-    document.getElementById("currentHeight").textContent =
-        "Height: " + actualHeights[person];
 
     remainingPeople = remainingPeople.filter(name => name !== person);
     turn++;
     currentPerson = null;
 
-    document.getElementById("score").textContent = totalScore;
-    document.getElementById("progress").style.width =
-        `${(turn / people.length) * 100}%`;
+    $("score").textContent = totalScore;
+    $("scoreLabel").textContent =
+        `${usedAttributes.length} of 7 attributes assigned · Total points so far`;
+    $("progress").style.width = `${(turn / people.length) * 100}%`;
 
-    const roster = document.getElementById("roster");
-
-    if (turn === 1) {
-        roster.innerHTML = "";
-    }
+    const roster = $("roster");
+    if (turn === 1) roster.innerHTML = "";
 
     const entry = document.createElement("div");
-    entry.className = "roster-item";
+    entry.className = "roster-item" + (attribute === null ? " unassigned" : "");
 
-    if (attribute === null) {
-        entry.classList.add("unassigned");
-    }
+    const photo = document.createElement("img");
+    photo.className = "roster-photo";
+    photo.src = photoPath(person);
+    photo.alt = person;
+    photo.onerror = () => { photo.style.visibility = "hidden"; };
+    entry.appendChild(photo);
 
-    const strong = document.createElement("strong");
-    strong.textContent = person;
-    entry.appendChild(strong);
+    const details = document.createElement("div");
+    const name = document.createElement("strong");
+    name.textContent = person;
+    details.appendChild(name);
 
-    const detail = document.createElement("div");
-    detail.textContent = attribute === null
+    const line = document.createElement("div");
+    line.textContent = attribute === null
         ? "No attribute assigned"
         : attribute === "Height"
             ? `Height: ${actualHeights[person]} · ${score} OVR`
             : `${attribute}: ${score} OVR`;
 
-    entry.appendChild(detail);
+    details.appendChild(line);
+    entry.appendChild(details);
     roster.appendChild(entry);
 
     if (turn === 9) {
         gameOver = true;
-
-        document.getElementById("turn").textContent = "DRAFT COMPLETE!";
-        document.getElementById("currentPerson").textContent = "FINAL SCORE";
-        document.getElementById("currentHeight").textContent =
-            `${totalScore} total OVR points`;
-        document.getElementById("message").textContent =
-            `Draft complete! You scored ${totalScore} out of 693.`;
-
-        spinButton.textContent = "GAME COMPLETE";
-        spinButton.disabled = true;
-
-        document.getElementById("restartContainer").style.display = "block";
+        showFinalResults();
     } else {
-        document.getElementById("turn").textContent =
-            `Turn ${turn + 1} of 9`;
-
-        document.getElementById("message").textContent =
-            attribute === null
-                ? "No attributes remain. Spin for the next player."
-                : "Pick saved! Spin for the next player.";
-
-        spinButton.textContent = "SPIN FOR NEXT PLAYER";
-        spinButton.disabled = false;
+        $("turn").textContent = `Turn ${turn + 1} of 9`;
+        $("message").textContent = attribute === null
+            ? "No attributes remain. Spin for the next player."
+            : "Pick saved! Spin for the next player.";
+        $("spinButton").textContent = "🎰 SPIN FOR NEXT PLAYER";
+        $("spinButton").disabled = false;
     }
 
     renderAttributes();
 }
 
+function average(values) {
+    return Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
+}
+
+function showFinalResults() {
+    const finalOvr = average(Object.values(assignments).map(item => item.score));
+
+    const moneyAttributes = ["Smarts", "Kindliness", "Humorous", "Manners"];
+    const fuhedAttributes = ["Build", "Humorous", "Manners", "Height"];
+
+    const moneyValues = moneyAttributes
+        .filter(attribute => assignments[attribute])
+        .map(attribute => assignments[attribute].score);
+
+    const fuhedValues = fuhedAttributes
+        .filter(attribute => assignments[attribute])
+        .map(attribute => assignments[attribute].score);
+
+    const money = average(moneyValues);
+    const fuhed = average(fuhedValues);
+
+    $("finalOvr").textContent = finalOvr;
+    $("moneyScore").textContent = money;
+    $("fuhedScore").textContent = fuhed;
+    $("turn").textContent = "DRAFT COMPLETE!";
+    $("spinButton").textContent = "GAME COMPLETE";
+    $("spinButton").disabled = true;
+    $("message").textContent = "Your build is complete!";
+    $("currentPerson").textContent = "FINAL BUILD";
+    $("currentHeight").textContent = `Average OVR: ${finalOvr}`;
+    $("resultDescription").textContent =
+        `Money is based on your available Smarts, Kindliness, Humorous, and Manners ratings. ` +
+        `Bih's Fuhed is based on your available Build, Humorous, Manners, and Height OVR ratings.`;
+
+    $("resultsPanel").classList.remove("hidden");
+    $("resultsPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    playSound("finish");
+}
+
+/* These endpoints will be added to app.py in the next step. */
+async function loadLeaderboard() {
+    const container = $("leaderboard");
+    container.innerHTML = '<p class="small-note">Loading leaderboard...</p>';
+
+    try {
+        const response = await fetch("/api/leaderboard");
+        if (!response.ok) throw new Error("Leaderboard server not set up");
+
+        const data = await response.json();
+        const entries = Array.isArray(data) ? data : data.leaderboard;
+
+        if (!Array.isArray(entries) || entries.length === 0) {
+            container.innerHTML = '<p class="small-note">No scores yet. Be the first!</p>';
+            return;
+        }
+
+        container.innerHTML = "";
+
+        const header = document.createElement("div");
+        header.className = "leaderboard-row leaderboard-head";
+        ["#", "NAME", "OVR", "MONEY", "BIH'S FUHED"].forEach(text => {
+            const cell = document.createElement("div");
+            cell.textContent = text;
+            header.appendChild(cell);
+        });
+        container.appendChild(header);
+
+        entries.forEach((item, index) => {
+            const row = document.createElement("div");
+            row.className = "leaderboard-row";
+            [index + 1, item.name, item.ovr, item.money, item.fuhed].forEach(value => {
+                const cell = document.createElement("div");
+                cell.textContent = value;
+                row.appendChild(cell);
+            });
+            container.appendChild(row);
+        });
+    } catch (error) {
+        container.innerHTML =
+            '<p class="small-note">The shared leaderboard needs its server setup. We will connect it next.</p>';
+    }
+}
+
+$("leaderboardForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const name = $("playerName").value.trim();
+    if (!name) return;
+
+    const entry = {
+        name,
+        ovr: Number($("finalOvr").textContent),
+        money: Number($("moneyScore").textContent),
+        fuhed: Number($("fuhedScore").textContent)
+    };
+
+    $("submitScoreButton").disabled = true;
+    $("submitMessage").textContent = "Submitting score...";
+
+    try {
+        const response = await fetch("/api/leaderboard", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(entry)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) throw new Error(result.error || "Submission failed");
+
+        $("submitMessage").textContent = "Score submitted! Check the leaderboard.";
+        $("playerName").disabled = true;
+        $("submitScoreButton").textContent = "SCORE SUBMITTED";
+        loadLeaderboard();
+    } catch (error) {
+        $("submitMessage").textContent =
+            "Leaderboard server is not connected yet. Your build is safe; we will set up score storage next.";
+        $("submitScoreButton").disabled = false;
+    }
+});
+
 function restartGame() {
     remainingPeople = [...people];
     usedAttributes = [];
+    assignments = {};
     currentPerson = null;
     totalScore = 0;
     turn = 0;
     spinning = false;
-    rotation = 0;
     gameOver = false;
 
-    wheel.style.transition = "none";
-    wheel.style.transform = "rotate(0deg)";
+    $("turn").textContent = "Turn 1 of 9";
+    $("score").textContent = "0";
+    $("scoreLabel").textContent = "Total points so far · 7 attributes available";
+    $("progress").style.width = "0%";
+    $("currentOvr").textContent = "--";
+    $("currentPerson").textContent = "Ready to draft?";
+    $("currentPhoto").src = photoPath("Max");
+    $("currentPhoto").style.visibility = "visible";
+    $("currentHeight").textContent = "Spin to select a player";
+    $("message").textContent = "Spin the machine to reveal your first player.";
 
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            wheel.style.transition =
-                "transform 3s cubic-bezier(.12,.75,.18,1)";
-        });
-    });
+    $("reel1").textContent = "FTFG";
+    $("reel2").textContent = "DRAFT";
+    $("reel3").textContent = "TIME";
+    $("roster").innerHTML = '<p class="status">Your drafted players will appear here.</p>';
 
-    document.getElementById("turn").textContent = "Turn 1 of 9";
-    document.getElementById("score").textContent = "0";
-    document.getElementById("progress").style.width = "0%";
-    document.getElementById("currentOvr").textContent = "--";
-    document.getElementById("currentPerson").textContent = "Ready to draft?";
-    document.getElementById("currentHeight").textContent =
-        "Spin to select a player";
-    document.getElementById("message").textContent =
-        "Spin the wheel to reveal your first player.";
+    $("resultsPanel").classList.add("hidden");
+    $("playerName").value = "";
+    $("playerName").disabled = false;
+    $("submitScoreButton").disabled = false;
+    $("submitScoreButton").textContent = "SUBMIT MY SCORE";
+    $("submitMessage").textContent = "";
 
-    document.getElementById("roster").innerHTML =
-        '<p class="status">Your drafted players will appear here.</p>';
-
-    document.getElementById("restartContainer").style.display = "none";
-
-    spinButton.textContent = "SPIN FOR A PLAYER";
-    spinButton.disabled = false;
+    $("spinButton").textContent = "🎰 SPIN FOR A PLAYER";
+    $("spinButton").disabled = false;
 
     renderAttributes();
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 renderAttributes();
+loadLeaderboard();
 </script>
 </body>
 </html>
