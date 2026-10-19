@@ -8,6 +8,7 @@ PEOPLE_FOLDER = Path(app.static_folder) / "people"
 
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 
+
 @app.route("/")
 def home():
     PEOPLE_FOLDER.mkdir(parents=True, exist_ok=True)
@@ -26,6 +27,12 @@ def home():
     ]
 
     return render_template("index.html", people=people)
+
+
+@app.route("/game")
+def game():
+    return render_template("game.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
