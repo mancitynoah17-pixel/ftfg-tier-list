@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FTFG Tier List Maker</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #171717;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #f5c542;
+            font-size: 38px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle { color: #bbb; }
+
+        #game {
+            max-width: 1000px;
+            margin: 25px auto;
+        }
+
+        #progress {
+            color: #f5c542;
+            font-weight: bold;
+            margin: 18px;
+        }
+
+        #current-person {
+            width: 220px;
+            min-height: 230px;
+            margin: 20px auto;
+            padding: 12px;
+            background: #292929;
+            border: 2px solid #f5c542;
+            border-radius: 12px;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        #current-person img {
+            width: 190px;
+            height: 190px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        #current-name {
+            display: block;
+            margin-top: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        #instructions { color: #ccc; }
+
+        .tier {
+            display: flex;
+            align-items: stretch;
+            min-height: 100px;
+            margin: 10px auto;
+            border: 2px solid #444;
+            border-radius: 7px;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .tier-label {
+            width: 125px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+            color: #171717;
+            font-weight: bold;
+        }
+
+        .tier-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: #292929;
+        }
+
+        .tier-content.over {
+            background: #41412f;
+            outline: 3px dashed #f5c542;
+            outline-offset: -3px;
+        }
+
+        .ranked-person {
+            width: 85px;
+            padding: 4px;
+            background: #383838;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .ranked-person img {
+            width: 72px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .ranked-person span {
+            display: block;
+            font-size: 11px;
+            overflow-wrap: anywhere;
+        }
+
+        .worthy { background: #ffdf55; }
+        .s-tier { background: #ff7777; }
+        .a-tier { background: #ffb366; }
+        .b-tier { background: #ffe680; }
+        .c-tier { background: #a7e6a1; }
+        .d-tier { background: #9bc8ff; }
+        .waste { background: #b8a1cf; }
+
+        button {
+            padding: 11px 18px;
+            margin: 8px;
+            border: none;
+            border-radius: 6px;
+            background: #f5c542;
+            color: #171717;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #finished {
+            padding: 25px;
+            background: #292929;
+            border-radius: 12px;
+        }
+
+        [hidden] { display: none !important; }
+
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            h1 { font-size: 30px; }
+            .tier-label { width: 90px; font-size: 12px; }
+            .ranked-person { width: 65px; }
+            .ranked-person img { width: 55px; height: 55px; }
+            #current-person { width: 190px; }
+            #current-person img { width: 160px; height: 160px; }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>FTFG TIER LIST</h1>
+    <p class="subtitle">FOR THE FUTURE GOOD</p>
+
+    <main id="game">
+        <div id="progress"></div>
+
+        <section id="playing">
+            <p id="instructions">
+                Drag the picture into the tier where you rank this person.
+            </p>
+
+            <div id="current-person" draggable="true">
+                <img id="current-image" src="" alt="Person to rank">
+                <span id="current-name"></span>
+            </div>
+
+            <p>Or click a tier to place the current picture there.</p>
+
+            <div id="tiers">
+                <div class="tier">
+                    <div class="tier-label worthy">FTFG WORTHY</div>
+                    <div class="tier-content" data-tier="FTFG WORTHY"></div>
+                </div>
+
+                <div class="tier">
+                    <div class="tier-label s-tier">S TIER</div>
+                    <div class="tier-content" data-tier="S TIER"></div>
+                </div>
+
+                <div class="tier">
+                    <div class="tier-label a-tier">A TIER</div>
+                    <div class="tier-content" data-tier="A TIER"></div>
+                </div>
+
+                <div class="tier">
+                    <div class="tier-label b-tier">B TIER</div>
+                    <div class="tier-content" data-tier="B TIER"></div>
+                </div>
+
+                <div class="tier">
+                    <div class="tier-label c-tier">C TIER</div>
+                    <div class="tier-content" data-tier="C TIER"></div>
+                </div>
+
+                <div class="tier">
+                    <div class="tier-label d-tier">D TIER</div>
+                    <div class="tier-content" data-tier="D TIER"></div>
+                </div>
+
+                <div class="tier">
+                    <div class="tier-label waste">WASTE OF O2</div>
+                    <div class="tier-content" data-tier="WASTE OF O2"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="finished" hidden>
+            <h2>YOU RANKED EVERYONE!</h2>
+            <p>Your FTFG tier list is complete.</p>
+            <button id="restart">Play Again</button>
+        </section>
+
+        <p id="message" role="status"></p>
+    </main>
+
+    <script>
+        const people = {{ people | tojson }};
+        let currentIndex = 0;
+        let dragged = false;
+
+        const currentCard = document.getElementById("current-person");
+        const currentImage = document.getElementById("current-image");
+        const currentName = document.getElementById("current-name");
+        const progress = document.getElementById("progress");
+        const playing = document.getElementById("playing");
+        const finished = document.getElementById("finished");
+        const message = document.getElementById("message");
+        const zones = document.querySelectorAll(".tier-content");
+
+        function showPerson() {
+            if (currentIndex >= people.length) {
+                playing.hidden = true;
+                finished.hidden = false;
+                progress.textContent = "All " + people.length + " people ranked!";
+                currentCard.draggable = false;
+                return;
+            }
+
+            playing.hidden = false;
+            finished.hidden = true;
+
+            const person = people[currentIndex];
+            currentImage.src = person.src;
+            currentImage.alt = person.name;
+            currentName.textContent = person.name;
+
+            progress.textContent =
+                "PERSON " + (currentIndex + 1) + " OF " + people.length;
+
+            message.textContent = "";
+            currentCard.draggable = true;
+        }
+
+        function rankPerson(zone) {
+            if (currentIndex >= people.length) return;
+
+            const person = people[currentIndex];
+
+            const card = document.createElement("div");
+            card.className = "ranked-person";
+
+            const image = document.createElement("img");
+            image.src = person.src;
+            image.alt = person.name;
+
+            const label = document.createElement("span");
+            label.textContent = person.name;
+
+            card.append(image, label);
+            zone.appendChild(card);
+
+            currentIndex++;
+            showPerson();
+        }
+
+        currentCard.addEventListener("dragstart", function(event) {
+            dragged = true;
+            event.dataTransfer.setData("text/plain", String(currentIndex));
+            event.dataTransfer.effectAllowed = "move";
+        });
+
+        currentCard.addEventListener("dragend", function() {
+            dragged = false;
+            zones.forEach(zone => zone.classList.remove("over"));
+        });
+
+        zones.forEach(function(zone) {
+            zone.addEventListener("dragover", function(event) {
+                event.preventDefault();
+                zone.classList.add("over");
+                event.dataTransfer.dropEffect = "move";
+            });
+
+            zone.addEventListener("dragleave", function(event) {
+                if (!zone.contains(event.relatedTarget)) {
+                    zone.classList.remove("over");
+                }
+            });
+
+            zone.addEventListener("drop", function(event) {
+                event.preventDefault();
+                zone.classList.remove("over");
+
+                if (!dragged) return;
+
+                dragged = false;
+                rankPerson(zone);
+            });
+
+            zone.addEventListener("click", function() {
+                rankPerson(zone);
+            });
+        });
+
+        document.getElementById("restart").addEventListener("click", function() {
+            currentIndex = 0;
+            zones.forEach(zone => zone.replaceChildren());
+            showPerson();
+        });
+
+        if (people.length === 0) {
+            playing.hidden = true;
+            progress.textContent = "No pictures found yet.";
+            message.textContent =
+                "Add JPG, PNG, GIF, or WEBP pictures to static/people, then refresh.";
+        } else {
+            showPerson();
+        }
+    </script>
+</body>
+</html>
