@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, jsonify
 from pathlib import Path
 import sqlite3
 import json
+import math
 
 app = Flask(__name__)
 
@@ -34,7 +35,7 @@ RATINGS = {
 }
 
 HEIGHTS = {
-    "Max":  "6'0\"",
+    "Max": "6'0\"",
     "Quinn": "6'3\"",
     "Chase": "5'11\"",
     "Will": "5'11\"",
@@ -44,6 +45,11 @@ HEIGHTS = {
     "Jaden": "5'8\"",
     "Jackson": "5'9\""
 }
+
+
+def round_half_up(value):
+    """Match JavaScript Math.round for nonnegative scores."""
+    return math.floor(value + 0.5)
 
 
 def height_ovr(height):
@@ -59,6 +65,38 @@ def get_rating(player, attribute):
     return RATINGS[player][attribute]
 
 
+def calculate_scores(build):
+    scores = {
+        attribute: get_rating(player, attribute)
+        for attribute, player in build.items()
+    }
+
+    # Overall: average of all seven attribute ratings.
+    overall = round_half_up(sum(scores.values()) / 7)
+
+    # Money: ((Manners + Kindliness) * Smarts) ** 2.
+    calculated_money = (
+        (scores["Manners"] + scores["Kindliness"])
+        * scores["Smarts"]
+    ) ** 2
+
+    # Bih's Fuhed: (Height + Build + Humorous
+    #               + Athleticism + Kindliness) / 8.
+    calculated_fuhed = (
+        scores["Height"]
+        + scores["Build"]
+        + scores["Humorous"]
+        + scores["Athleticism"]
+        + scores["Kindliness"]
+    ) / 8
+
+    return {
+        "overall": overall,
+        "money": calculated_money,
+        "fuhed": calculated_fuhed
+    }
+
+
 def init_database():
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 
@@ -69,7 +107,7 @@ def init_database():
                 name TEXT NOT NULL,
                 overall INTEGER NOT NULL,
                 money INTEGER NOT NULL,
-                fuhed INTEGER NOT NULL,
+                fuhed REAL NOT NULL,
                 build TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
@@ -129,54 +167,64 @@ def save_leaderboard():
 
     name = str(data.get("name", "")).strip()
     build = data.get("build")
-    overall = data.get("overall")
-    money = data.get("money")
-    fuhed = data.get("fuhed")
 
     if not name or len(name) > 24:
-        return jsonify({"error": "Enter a name of 1–24 characters."}), 400
+        return jsonify({
+            "error": "Enter a name of 1–24 characters."
+        }), 400
 
     if not isinstance(build, dict):
         return jsonify({"error": "Your build is missing."}), 400
 
     if set(build.keys()) != set(ATTRIBUTES):
-        return jsonify({"error": "Your build must contain all seven attributes."}), 400
+        return jsonify({
+            "error": "Your build must contain all seven attributes."
+        }), 400
 
-    if any(player not in PLAYERS for player in build.values()):
+    # Repeated players are allowed. Only the attribute names must be unique.
+    if any(
+        not isinstance(player, str) or player not in PLAYERS
+        for player in build.values()
+    ):
         return jsonify({"error": "Invalid player in build."}), 400
 
-    if len(set(build.values())) != 7:
-        return jsonify({"error": "Each player can only be selected once."}), 400
-
     try:
-        # Recalculate scores on the server instead of trusting browser values.
-        scores = {
-            attribute: get_rating(player, attribute)
-            for attribute, player in build.items()
-        }
+        # Calculate the scores on the server instead of trusting the browser.
+        calculated = calculate_scores(build)
 
-        calculated_overall = round(sum(scores.values()) / 7)
+        # Validate submitted values.
+        overall = data.get("overall")
+        money = data.get("money")
+        fuhed = data.get("fuhed")
 
-        money_attributes = ["Smarts", "Kindliness", "Humorous", "Manners"]
-        fuhed_attributes = ["Build", "Humorous", "Manners", "Height"]
+        if isinstance(overall, bool) or not isinstance(overall, (int, float)):
+            return jsonify({"error": "Invalid overall score."}), 400
 
-        calculated_money = round(
-            sum(scores[a] for a in money_attributes) /
-            len(money_attributes)
-        )
+        if isinstance(money, bool) or not isinstance(money, (int, float)):
+            return jsonify({"error": "Invalid money score."}), 400
 
-        calculated_fuhed = round(
-            sum(scores[a] for a in fuhed_attributes) /
-            len(fuhed_attributes)
-        )
+        if isinstance(fuhed, bool) or not isinstance(fuhed, (int, float)):
+            return jsonify({"error": "Invalid Fuhed score."}), 400
 
-        # Reject a submission if the supplied scores don't match the build.
+        if not all(math.isfinite(value) for value in (overall, money, fuhed)):
+            return jsonify({"error": "Invalid score data."}), 400
+
         if (
-            overall != calculated_overall
-            or money != calculated_money
-            or fuhed != calculated_fuhed
+            overall != calculated["overall"]
+            or money != calculated["money"]
+            or not math.isclose(
+                float(fuhed),
+                calculated["fuhed"],
+                rel_tol=0,
+                abs_tol=1e-9
+            )
         ):
-            return jsonify({"error": "The submitted scores don't match your build. Please refresh and try again."}), 400
+            return jsonify({
+                "error": (
+                    "The submitted scores don't match your build. "
+                    "Please refresh and try again."
+                )
+            }), 400
 
         with sqlite3.connect(DATABASE) as connection:
             connection.execute("""
@@ -185,9 +233,9 @@ def save_leaderboard():
                 VALUES (?, ?, ?, ?, ?)
             """, (
                 name,
-                calculated_overall,
-                calculated_money,
-                calculated_fuhed,
+                calculated["overall"],
+                calculated["money"],
+                calculated["fuhed"],
                 json.dumps(build)
             ))
 
@@ -196,7 +244,7 @@ def save_leaderboard():
             "message": "Your score has been submitted!"
         }), 201
 
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, KeyError, OverflowError):
         return jsonify({"error": "Invalid score data."}), 400
 
 
