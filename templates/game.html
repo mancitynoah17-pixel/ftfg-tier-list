@@ -1,0 +1,731 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FTFG | Attribute Draft</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 24px;
+    background: radial-gradient(circle at top, #202b3e 0%, #0b0f17 65%);
+    color: #f4f7fb;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.game {
+    max-width: 950px;
+    margin: auto;
+}
+
+h1 {
+    color: #66e39a;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 18px rgba(102, 227, 154, 0.25);
+}
+
+h2 {
+    margin-top: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.subtitle, .status {
+    color: #b8c5d8;
+    line-height: 1.6;
+}
+
+.panel {
+    background: linear-gradient(145deg, #1c2636, #111925);
+    border: 1px solid #344258;
+    border-radius: 18px;
+    padding: 24px;
+    margin: 20px 0;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.wheel-container {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 24px auto;
+}
+
+.pointer {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: #66e39a;
+    font-size: 30px;
+}
+
+#wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 6px solid white;
+    position: relative;
+    background: conic-gradient(
+        #16a34a 0deg 40deg,
+        #2563eb 40deg 80deg,
+        #9333ea 80deg 120deg,
+        #ea580c 120deg 160deg,
+        #0891b2 160deg 200deg,
+        #be123c 200deg 240deg,
+        #ca8a04 240deg 280deg,
+        #4f46e5 280deg 320deg,
+        #0f766e 320deg 360deg
+    );
+    transition: transform 3s cubic-bezier(.12,.75,.18,1);
+}
+
+.wheel-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: #101722;
+    border: 4px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    color: #66e39a;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 13px 18px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 5px;
+    transition: transform .15s, opacity .15s;
+}
+
+button:not(:disabled):hover {
+    transform: translateY(-2px);
+}
+
+.primary {
+    background: #66e39a;
+    color: #101722;
+}
+
+button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.person-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: #101722;
+    border: 1px solid #3b4b61;
+    border-radius: 16px;
+    padding: 18px;
+    margin: 18px auto;
+    max-width: 460px;
+}
+
+.ovr-badge {
+    min-width: 90px;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #66e39a, #159957);
+    color: #07120c;
+    font-size: 36px;
+    font-weight: 900;
+}
+
+.ovr-badge small {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+.person {
+    font-size: 28px;
+    font-weight: 900;
+    margin: 8px;
+    color: #66e39a;
+}
+
+.attributes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.attribute {
+    background: #29364a;
+    color: white;
+    border: 1px solid #465671;
+}
+
+.attribute:not(:disabled):hover {
+    background: #36516b;
+    border-color: #66e39a;
+}
+
+.attribute.used {
+    text-decoration: line-through;
+    background: #151923;
+    color: #7d899b;
+}
+
+.score {
+    font-size: clamp(40px, 8vw, 60px);
+    color: #66e39a;
+    font-weight: 900;
+}
+
+.score-label {
+    color: #b8c5d8;
+    margin-top: 0;
+}
+
+.progress-track {
+    height: 8px;
+    background: #303b4e;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 16px auto;
+    max-width: 500px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #66e39a;
+    transition: width .3s;
+}
+
+#roster {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    text-align: left;
+}
+
+.roster-item {
+    padding: 14px;
+    background: #202c3e;
+    border: 1px solid #35455d;
+    border-radius: 10px;
+    overflow-wrap: anywhere;
+}
+
+.roster-item strong {
+    color: #66e39a;
+}
+
+.roster-item.unassigned strong {
+    color: #f0bc66;
+}
+
+.small-note {
+    color: #8998ae;
+    font-size: 13px;
+}
+
+@media(max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+
+    .panel {
+        padding: 16px;
+    }
+
+    .wheel-container {
+        width: 240px;
+        height: 240px;
+    }
+
+    .person-card {
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .ovr-badge {
+        min-width: 70px;
+        font-size: 30px;
+    }
+
+    .person {
+        font-size: 23px;
+    }
+
+    #roster {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+<main class="game">
+    <h1>FTFG Attribute Draft</h1>
+    <p class="subtitle">
+        Nine players. Seven attributes. Draft your best team.
+    </p>
+
+    <section class="panel">
+        <h2>Player Selection</h2>
+        <p class="status" id="turn">Turn 1 of 9</p>
+
+        <div class="progress-track">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+
+        <div class="wheel-container">
+            <div class="pointer">▼</div>
+            <div id="wheel">
+                <div class="wheel-center">FTFG</div>
+            </div>
+        </div>
+
+        <button class="primary" id="spinButton" onclick="spinWheel()">
+            SPIN FOR A PLAYER
+        </button>
+
+        <div class="person-card">
+            <div class="ovr-badge">
+                <span id="currentOvr">--</span>
+                <small>OVR</small>
+            </div>
+            <div>
+                <div class="person" id="currentPerson">Ready to draft?</div>
+                <p id="currentHeight" class="status">
+                    Spin to select a player
+                </p>
+            </div>
+        </div>
+
+        <p class="status" id="message">
+            Spin the wheel to reveal your first player.
+        </p>
+    </section>
+
+    <section class="panel">
+        <h2>Choose an Attribute</h2>
+        <p class="status">
+            Each attribute can only be used once.
+        </p>
+        <div class="attributes" id="attributes"></div>
+        <p class="small-note">
+            Ratings range from 1 to 99 OVR. Height is calculated from actual height.
+        </p>
+    </section>
+
+    <section class="panel">
+        <h2>Your Draft Score</h2>
+        <div class="score" id="score">0</div>
+        <p class="score-label">Total OVR points · Maximum 693</p>
+
+        <h2>Your Draft Board</h2>
+        <div id="roster">
+            <p class="status">Your drafted players will appear here.</p>
+        </div>
+
+        <div id="restartContainer" style="display:none; margin-top:20px;">
+            <button class="primary" onclick="restartGame()">
+                PLAY AGAIN
+            </button>
+        </div>
+    </section>
+</main>
+
+<script>
+// Ratings converted from the original 1–10 scale.
+// These are starter ratings and can be customized later.
+
+const ratings = {
+    "Max": {
+        Build: 70,
+        Smarts: 99,
+        Athleticism: 94,
+        Kindliness: 91,
+        Humorous: 82,
+        Manners: 93
+    },
+    "Quinn": {
+        Build: 89,
+        Smarts: 88,
+        Athleticism: 95,
+        Kindliness: 81,
+        Humorous: 88,
+        Manners: 85
+    },
+    "Chase": {
+        Build: 75,
+        Smarts: 95,
+        Athleticism: 83,
+        Kindliness: 89,
+        Humorous: 83,
+        Manners: 80
+    },
+    "Will": {
+        Build: 95,
+        Smarts: 83,
+        Athleticism: 88,
+        Kindliness: 94,
+        Humorous: 90,
+        Manners: 94
+    },
+    "Walter": {
+        Build: 80,
+        Smarts: 99,
+        Athleticism: 87,
+        Kindliness: 97,
+        Humorous: 91,
+        Manners: 81
+    },
+    "Connor": {
+        Build: 96,
+        Smarts: 79,
+        Athleticism: 85,
+        Kindliness: 80,
+        Humorous: 98,
+        Manners: 61
+    },
+    "Noah": {
+        Build: 73,
+        Smarts: 86,
+        Athleticism: 93,
+        Kindliness: 85,
+        Humorous: 93,
+        Manners: 85
+    },
+    "Jaden": {
+        Build: 96,
+        Smarts: 80,
+        Athleticism: 94,
+        Kindliness: 96,
+        Humorous: 90,
+        Manners: 95
+    },
+    "Jackson": {
+        Build: 86,
+        Smarts: 96,
+        Athleticism: 85,
+        Kindliness: 89,
+        Humorous: 90,
+        Manners: 89
+    }
+};
+
+const actualHeights = {
+    "Max": "6'0\"",
+    "Quinn": "6'3\"",
+    "Chase": "5'11\"",
+    "Will": "5'11\"",
+    "Walter": "6'5\"",
+    "Connor": "5'11\"",
+    "Noah": "6'0\"",
+    "Jaden": "5'8\"",
+    "Jackson": "5'9\""
+};
+
+
+const people = Object.keys(ratings);
+const attributes = [
+    "Height",
+    "Build",
+    "Smarts",
+    "Athleticism",
+    "Kindliness",
+    "Humorous",
+    "Manners"
+];
+
+let remainingPeople = [...people];
+let usedAttributes = [];
+let currentPerson = null;
+let totalScore = 0;
+let turn = 0;
+let spinning = false;
+let rotation = 0;
+let gameOver = false;
+
+const wheel = document.getElementById("wheel");
+const spinButton = document.getElementById("spinButton");
+
+function heightToOvr(height) {
+    const match = height.match(/^(\d+)'(\d+)"$/);
+    if (!match) return null;
+
+    const totalInches = Number(match[1]) * 12 + Number(match[2]);
+    const sixFiveInches = 6 * 12 + 5;
+
+    return Math.max(
+        1,
+        Math.min(99, 99 - (sixFiveInches - totalInches) * 3)
+    );
+}
+
+function getRating(person, attribute) {
+    if (attribute === "Height") {
+        return heightToOvr(actualHeights[person]);
+    }
+
+    return ratings[person][attribute];
+}
+
+function renderAttributes() {
+    const container = document.getElementById("attributes");
+    container.innerHTML = "";
+
+    attributes.forEach(attribute => {
+        const button = document.createElement("button");
+        button.className = "attribute";
+        button.textContent = attribute;
+
+        if (usedAttributes.includes(attribute)) {
+            button.disabled = true;
+            button.classList.add("used");
+            button.textContent += " ✓";
+        } else {
+            button.disabled = !currentPerson || spinning || gameOver;
+            button.onclick = () => selectAttribute(attribute);
+        }
+
+        container.appendChild(button);
+    });
+}
+
+function spinWheel() {
+    if (
+        spinning ||
+        currentPerson ||
+        remainingPeople.length === 0 ||
+        gameOver
+    ) {
+        return;
+    }
+
+    spinning = true;
+    spinButton.disabled = true;
+    renderAttributes();
+
+    const selectedIndex = Math.floor(
+        Math.random() * remainingPeople.length
+    );
+    const selectedPerson = remainingPeople[selectedIndex];
+
+    const sectionAngle = 360 / people.length;
+    const targetAngle =
+        360 - (selectedIndex * sectionAngle + sectionAngle / 2);
+
+    const currentAngle = ((rotation % 360) + 360) % 360;
+    const adjustment = (targetAngle - currentAngle + 360) % 360;
+
+    rotation += 360 * 5 + adjustment;
+    wheel.style.transform = `rotate(${rotation}deg)`;
+
+    setTimeout(() => {
+        currentPerson = selectedPerson;
+        spinning = false;
+
+        document.getElementById("currentPerson").textContent =
+            currentPerson;
+
+        document.getElementById("currentOvr").textContent = "--";
+
+        document.getElementById("currentHeight").textContent =
+            "Height: " + actualHeights[currentPerson];
+
+        if (usedAttributes.length === attributes.length) {
+            document.getElementById("message").textContent =
+                "All seven attributes are taken. This player gets no attribute.";
+
+            finishTurn(null);
+        } else {
+            document.getElementById("message").textContent =
+                "Choose one available attribute for this player.";
+
+            spinButton.textContent = "PLAYER SELECTED";
+            renderAttributes();
+        }
+    }, 3100);
+}
+
+function selectAttribute(attribute) {
+    if (
+        !currentPerson ||
+        usedAttributes.includes(attribute) ||
+        spinning ||
+        gameOver
+    ) {
+        return;
+    }
+
+    finishTurn(attribute);
+}
+
+function finishTurn(attribute) {
+    const person = currentPerson;
+    if (!person) return;
+
+    let entryText;
+    let score = null;
+
+    if (attribute !== null) {
+        score = getRating(person, attribute);
+
+        if (score === null || !Number.isFinite(score)) {
+            document.getElementById("message").textContent =
+                "Could not calculate this player's height rating. Check the height format.";
+            return;
+        }
+
+        usedAttributes.push(attribute);
+        totalScore += score;
+
+        if (attribute === "Height") {
+            entryText =
+                `${person} — Height: ${actualHeights[person]} (${score} OVR)`;
+        } else {
+            entryText = `${person} — ${attribute}: ${score} OVR`;
+        }
+
+        document.getElementById("currentOvr").textContent = score;
+    } else {
+        entryText = `${person} — No attribute available`;
+        document.getElementById("currentOvr").textContent = "--";
+    }
+
+    document.getElementById("currentPerson").textContent = person;
+    document.getElementById("currentHeight").textContent =
+        "Height: " + actualHeights[person];
+
+    remainingPeople = remainingPeople.filter(name => name !== person);
+    turn++;
+    currentPerson = null;
+
+    document.getElementById("score").textContent = totalScore;
+    document.getElementById("progress").style.width =
+        `${(turn / people.length) * 100}%`;
+
+    const roster = document.getElementById("roster");
+
+    if (turn === 1) {
+        roster.innerHTML = "";
+    }
+
+    const entry = document.createElement("div");
+    entry.className = "roster-item";
+
+    if (attribute === null) {
+        entry.classList.add("unassigned");
+    }
+
+    const strong = document.createElement("strong");
+    strong.textContent = person;
+    entry.appendChild(strong);
+
+    const detail = document.createElement("div");
+    detail.textContent = attribute === null
+        ? "No attribute assigned"
+        : attribute === "Height"
+            ? `Height: ${actualHeights[person]} · ${score} OVR`
+            : `${attribute}: ${score} OVR`;
+
+    entry.appendChild(detail);
+    roster.appendChild(entry);
+
+    if (turn === 9) {
+        gameOver = true;
+
+        document.getElementById("turn").textContent = "DRAFT COMPLETE!";
+        document.getElementById("currentPerson").textContent = "FINAL SCORE";
+        document.getElementById("currentHeight").textContent =
+            `${totalScore} total OVR points`;
+        document.getElementById("message").textContent =
+            `Draft complete! You scored ${totalScore} out of 693.`;
+
+        spinButton.textContent = "GAME COMPLETE";
+        spinButton.disabled = true;
+
+        document.getElementById("restartContainer").style.display = "block";
+    } else {
+        document.getElementById("turn").textContent =
+            `Turn ${turn + 1} of 9`;
+
+        document.getElementById("message").textContent =
+            attribute === null
+                ? "No attributes remain. Spin for the next player."
+                : "Pick saved! Spin for the next player.";
+
+        spinButton.textContent = "SPIN FOR NEXT PLAYER";
+        spinButton.disabled = false;
+    }
+
+    renderAttributes();
+}
+
+function restartGame() {
+    remainingPeople = [...people];
+    usedAttributes = [];
+    currentPerson = null;
+    totalScore = 0;
+    turn = 0;
+    spinning = false;
+    rotation = 0;
+    gameOver = false;
+
+    wheel.style.transition = "none";
+    wheel.style.transform = "rotate(0deg)";
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            wheel.style.transition =
+                "transform 3s cubic-bezier(.12,.75,.18,1)";
+        });
+    });
+
+    document.getElementById("turn").textContent = "Turn 1 of 9";
+    document.getElementById("score").textContent = "0";
+    document.getElementById("progress").style.width = "0%";
+    document.getElementById("currentOvr").textContent = "--";
+    document.getElementById("currentPerson").textContent = "Ready to draft?";
+    document.getElementById("currentHeight").textContent =
+        "Spin to select a player";
+    document.getElementById("message").textContent =
+        "Spin the wheel to reveal your first player.";
+
+    document.getElementById("roster").innerHTML =
+        '<p class="status">Your drafted players will appear here.</p>';
+
+    document.getElementById("restartContainer").style.display = "none";
+
+    spinButton.textContent = "SPIN FOR A PLAYER";
+    spinButton.disabled = false;
+
+    renderAttributes();
+}
+
+renderAttributes();
+</script>
+</body>
+</html>
