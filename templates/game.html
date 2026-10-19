@@ -7,245 +7,690 @@
 
 <style>
 :root {
-    --bg: #07111f;
-    --panel: #101f32;
-    --green: #a3ff72;
-    --text: #f5f7fb;
-    --muted: #aab8c9;
-    --border: #2c4056;
+    --bg: #050816;
+    --panel: rgba(15, 23, 42, 0.78);
+    --panel-solid: #0f172a;
+    --green: #8bff5d;
+    --cyan: #35d9ff;
+    --purple: #a56cff;
+    --pink: #ff5ea8;
+    --yellow: #ffd65a;
+    --blue: #548cff;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --border: rgba(148, 163, 184, 0.18);
 }
 
 * {
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
-    background: var(--bg);
+    min-height: 100vh;
     color: var(--text);
-    font-family: Arial, sans-serif;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(84,140,255,.18), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(165,108,255,.15), transparent 30%),
+        radial-gradient(circle at 50% 80%, rgba(53,217,255,.09), transparent 35%),
+        #050816;
 }
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+button,
+a,
+input {
+    font: inherit;
+}
+
+/* HEADER */
 
 header {
-    padding: 24px 16px;
+    position: relative;
+    padding: 34px 20px 22px;
     text-align: center;
     border-bottom: 1px solid var(--border);
+    background: rgba(5, 8, 22, .72);
+    backdrop-filter: blur(14px);
 }
 
-header h1 {
+.logo {
     margin: 0;
-    color: var(--green);
-    letter-spacing: 2px;
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 950;
+    letter-spacing: 3px;
+    line-height: 1;
+    background: linear-gradient(
+        90deg,
+        var(--green),
+        var(--cyan),
+        var(--purple)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-header p {
+.tagline {
+    margin: 9px 0 18px;
     color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 4px;
 }
 
 nav {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 12px;
-    padding: 14px;
+    gap: 10px;
 }
 
-a,
-button {
+nav a,
+nav button {
     border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 11px 15px;
+    background: rgba(15, 23, 42, .75);
     color: var(--text);
-    background: var(--panel);
+    padding: 10px 16px;
+    border-radius: 999px;
     text-decoration: none;
+    font-weight: 800;
     cursor: pointer;
-    font-weight: bold;
+    transition: .2s ease;
 }
 
-button:hover,
-a:hover {
-    border-color: var(--green);
+nav a:hover,
+nav button:hover {
+    transform: translateY(-2px);
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px rgba(53,217,255,.15);
 }
 
-button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
+/* MAIN */
 
 main {
-    max-width: 1100px;
-    padding: 16px;
-    margin: auto;
+    width: min(1180px, calc(100% - 28px));
+    margin: 28px auto 70px;
 }
 
 .panel {
-    background: var(--panel);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    padding: 24px;
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 18px;
+    border-radius: 24px;
+    background: var(--panel);
+    backdrop-filter: blur(16px);
+    box-shadow:
+        0 18px 60px rgba(0,0,0,.28),
+        inset 0 1px 0 rgba(255,255,255,.035);
 }
 
-h2 {
-    margin-top: 0;
+.panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(53,217,255,.65),
+        transparent
+    );
 }
 
-.muted {
+.section-title {
+    margin: 0 0 5px;
+    font-size: 21px;
+    font-weight: 900;
+}
+
+.section-subtitle {
+    margin: 0 0 20px;
     color: var(--muted);
-}
-
-.green {
-    color: var(--green);
+    line-height: 1.5;
 }
 
 .center {
     text-align: center;
 }
 
-.status {
-    min-height: 24px;
-    color: var(--muted);
+/* DRAFT HERO */
+
+.draft-panel {
+    padding: 30px;
+    background:
+        radial-gradient(circle at top, rgba(53,217,255,.08), transparent 45%),
+        var(--panel);
+}
+
+.round-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid rgba(139,255,93,.25);
+    border-radius: 999px;
+    background: rgba(139,255,93,.08);
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+#currentAttribute {
+    margin-top: 17px;
+    font-size: clamp(25px, 5vw, 40px);
+    font-weight: 950;
 }
 
 .reels {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin: 20px 0;
+    gap: 12px;
+    margin: 26px auto;
+    max-width: 850px;
 }
 
 .reel {
-    min-height: 88px;
+    position: relative;
     display: grid;
     place-items: center;
-    text-align: center;
-    padding: 12px 4px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: #07111f;
-    font-size: clamp(15px, 3vw, 22px);
-    font-weight: bold;
-    overflow-wrap: anywhere;
+    min-height: 105px;
+    padding: 15px 8px;
+    overflow: hidden;
+    border: 1px solid rgba(53,217,255,.25);
+    border-radius: 18px;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.01)
+        ),
+        #080d1d;
+    font-size: clamp(17px, 3vw, 27px);
+    font-weight: 950;
+    text-transform: uppercase;
+    box-shadow:
+        inset 0 0 30px rgba(0,0,0,.4),
+        0 0 25px rgba(53,217,255,.05);
 }
 
-#currentAttribute {
-    font-size: 25px;
-    color: var(--green);
-    font-weight: bold;
+.reel::before,
+.reel::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    pointer-events: none;
 }
 
-button.primary {
-    color: #08111c;
-    background: var(--green);
-    border-color: var(--green);
+.reel::before {
+    top: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(5,8,22,.85),
+        transparent
+    );
 }
 
-.attributes,
-.players,
-.results {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+.reel::after {
+    bottom: 0;
+    background: linear-gradient(
+        to top,
+        rgba(5,8,22,.85),
+        transparent
+    );
+}
+
+.action-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 12px;
 }
 
-.attribute-card,
-.player-card,
-.result-card {
-    background: #07111f;
+button {
+    border: 0;
+}
+
+.spin-button {
+    min-width: 220px;
+    padding: 16px 30px;
+    border-radius: 14px;
+    background: linear-gradient(
+        100deg,
+        var(--green),
+        #4cffc4
+    );
+    color: #04120d;
+    font-size: 17px;
+    font-weight: 950;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow:
+        0 10px 35px rgba(139,255,93,.18),
+        0 0 25px rgba(139,255,93,.12);
+    transition: .2s ease;
+}
+
+.spin-button:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.015);
+    box-shadow:
+        0 14px 40px rgba(139,255,93,.25),
+        0 0 35px rgba(139,255,93,.18);
+}
+
+.secondary-button {
+    padding: 14px 20px;
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px;
-    min-width: 0;
+    border-radius: 14px;
+    background: rgba(255,255,255,.04);
+    color: var(--text);
+    font-weight: 800;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.secondary-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: var(--purple);
+}
+
+button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.status {
+    min-height: 24px;
+    margin: 18px 0 0;
+    color: var(--muted);
+}
+
+/* ATTRIBUTES */
+
+.attribute-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
 }
 
 .attribute-choice {
-    min-height: 50px;
+    position: relative;
+    min-height: 84px;
+    padding: 12px 8px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: white;
+    background: #0a1020;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.attribute-choice:nth-child(1) {
+    border-color: rgba(53,217,255,.35);
+}
+
+.attribute-choice:nth-child(2) {
+    border-color: rgba(165,108,255,.35);
+}
+
+.attribute-choice:nth-child(3) {
+    border-color: rgba(255,214,90,.35);
+}
+
+.attribute-choice:nth-child(4) {
+    border-color: rgba(139,255,93,.35);
+}
+
+.attribute-choice:nth-child(5) {
+    border-color: rgba(255,94,168,.35);
+}
+
+.attribute-choice:nth-child(6) {
+    border-color: rgba(84,140,255,.4);
+}
+
+.attribute-choice:nth-child(7) {
+    border-color: rgba(76,255,196,.35);
+}
+
+.attribute-choice:hover:not(:disabled) {
+    transform: translateY(-4px);
+    border-color: var(--cyan);
+    box-shadow: 0 10px 30px rgba(53,217,255,.12);
 }
 
 .attribute-choice.used {
-    opacity: 0.4;
+    opacity: .3;
 }
 
-.player-card {
+/* BUILD */
+
+.build-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.attribute-card {
+    min-height: 125px;
+    padding: 14px 10px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.01)
+        );
     text-align: center;
 }
 
+.attribute-card strong {
+    display: block;
+    margin-bottom: 13px;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.build-player {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.build-rating {
+    margin-top: 7px;
+    color: var(--green);
+    font-size: 21px;
+    font-weight: 950;
+}
+
+/* PLAYERS */
+
+.players {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 10px;
+}
+
+.player-card {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: #080d1d;
+    transition: .2s ease;
+}
+
+.player-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(53,217,255,.45);
+}
+
 .player-card img {
+    display: block;
     width: 100%;
-    height: 150px;
+    height: 125px;
     object-fit: cover;
-    border-radius: 8px;
-    background: #1b2d41;
+    background: #111827;
 }
 
 .player-card img.missing {
     display: none;
 }
 
-.player-name {
-    font-weight: bold;
-    margin: 10px 0 5px;
+.player-info {
+    padding: 10px 8px 12px;
+    text-align: center;
 }
 
-.attribute-card strong {
+.player-name {
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.player-state {
     display: block;
-    margin-bottom: 6px;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* RESULTS */
+
+.results-panel {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(165,108,255,.12), transparent 45%),
+        var(--panel);
+}
+
+.results {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.result-card {
+    position: relative;
+    padding: 25px 15px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: #080d1d;
+    text-align: center;
+}
+
+.result-card:nth-child(1) {
+    border-color: rgba(139,255,93,.35);
+}
+
+.result-card:nth-child(2) {
+    border-color: rgba(255,214,90,.35);
+}
+
+.result-card:nth-child(3) {
+    border-color: rgba(165,108,255,.35);
+}
+
+.result-label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .score {
-    font-size: 30px;
+    margin-top: 8px;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 950;
+}
+
+.result-card:nth-child(1) .score {
     color: var(--green);
-    font-weight: bold;
+}
+
+.result-card:nth-child(2) .score {
+    color: var(--yellow);
+}
+
+.result-card:nth-child(3) .score {
+    color: var(--purple);
+}
+
+.formula {
+    margin: 20px 0;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.025);
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.submit-area {
+    text-align: center;
 }
 
 input {
-    width: 100%;
-    max-width: 400px;
-    padding: 12px;
-    border-radius: 8px;
+    width: min(100%, 400px);
+    padding: 14px 16px;
     border: 1px solid var(--border);
-    background: #07111f;
+    border-radius: 13px;
+    outline: none;
+    background: #080d1d;
     color: white;
-    font-size: 16px;
+}
+
+input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(53,217,255,.08);
+}
+
+.submit-button {
+    margin-top: 10px;
+    padding: 13px 20px;
+    border-radius: 12px;
+    background: linear-gradient(100deg, var(--purple), var(--cyan));
+    color: white;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+/* LEADERBOARD */
+
+.leaderboard-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 16px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px;
 }
 
-th,
-td {
-    text-align: left;
-    padding: 10px 7px;
-    border-bottom: 1px solid var(--border);
-}
-
-.table-wrap {
-    overflow-x: auto;
-}
-
-small {
+th {
+    padding: 13px;
+    background: rgba(255,255,255,.04);
     color: var(--muted);
+    font-size: 11px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-@media (max-width: 520px) {
+td {
+    padding: 14px 13px;
+    border-top: 1px solid var(--border);
+}
+
+tbody tr {
+    transition: .15s ease;
+}
+
+tbody tr:hover {
+    background: rgba(255,255,255,.025);
+}
+
+.rank {
+    color: var(--cyan);
+    font-weight: 950;
+}
+
+/* MOBILE */
+
+@media (max-width: 1000px) {
+    .players {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .attribute-grid,
+    .build-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
     main {
-        padding: 10px;
+        width: min(100% - 16px, 1180px);
+        margin-top: 14px;
     }
 
     .panel {
-        padding: 14px;
+        padding: 17px;
+        border-radius: 18px;
+    }
+
+    .draft-panel {
+        padding: 20px 14px;
+    }
+
+    .reels {
+        gap: 6px;
     }
 
     .reel {
-        min-height: 72px;
+        min-height: 80px;
+        padding: 8px 3px;
+        font-size: 13px;
     }
 
-    th,
-    td {
-        padding: 8px 4px;
-        font-size: 13px;
+    .attribute-grid,
+    .build-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .players {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .player-card img {
+        height: 120px;
+    }
+
+    .results {
+        grid-template-columns: 1fr;
+    }
+
+    .leaderboard-head {
+        align-items: flex-start;
+        flex-direction: column;
     }
 }
 </style>
@@ -254,143 +699,223 @@ small {
 <body>
 
 <header>
-    <h1>FTFG ATTRIBUTE DRAFT</h1>
-    <p>FOR THE FUTURE GOOD</p>
+    <h1 class="logo">FTFG</h1>
+    <p class="tagline">FOR THE FUTURE GOOD</p>
 
     <nav>
-        <a href="/game">Attribute Draft</a>
-        <a href="/tier-list">Tier List Maker</a>
-        <button id="soundButton" type="button">Sound: ON</button>
+        <a href="/game">⚡ Attribute Draft</a>
+        <a href="/tier-list">🏆 Tier List Maker</a>
+        <button id="soundButton" type="button">🔊 Sound ON</button>
     </nav>
 </header>
 
 <main>
 
-<section class="panel center">
-    <h2>Draft your seven attributes</h2>
-
-    <p class="muted">
-        Spin to reveal a player, then choose which available attribute
-        you want to give them. Players can appear more than once.
-    </p>
-
-    <p>
-        Attribute <span id="roundNumber">1</span> of 7
-    </p>
-
-    <div id="currentAttribute">Spin for a player</div>
-
-    <div class="reels" aria-live="polite">
-        <div class="reel" id="reel1">Ready</div>
-        <div class="reel" id="reel2">Set</div>
-        <div class="reel" id="reel3">Draft</div>
+<section class="panel draft-panel center">
+    <div class="round-badge">
+        ROUND <span id="roundNumber">1</span> / 7
     </div>
 
-    <button id="spinButton" class="primary" type="button">
-        SPIN
-    </button>
-
-    <button id="resetButton" type="button">
-        Restart Draft
-    </button>
-
-    <p id="status" class="status" role="status">
-        Press SPIN to start.
-    </p>
-</section>
-
-<section class="panel">
-    <h2>Choose an attribute</h2>
-
-    <p class="muted">
-        After a player is selected, choose one unused attribute for them.
-    </p>
-
-    <div id="attributeChoices" class="attributes"></div>
-</section>
-
-<section class="panel">
-    <h2>Your build</h2>
-
-    <div id="assignments" class="attributes">
-        <p class="muted">
-            Your assigned players will appear here.
-        </p>
+    <div id="currentAttribute">
+        Spin for a player
     </div>
+
+    <p class="section-subtitle">
+        Spin the wheel, reveal your player, then decide where they belong.
+    </p>
+
+    <div class="reels">
+        <div class="reel" id="reel1">READY</div>
+        <div class="reel" id="reel2">FTFG</div>
+        <div class="reel" id="reel3">DRAFT</div>
+    </div>
+
+    <div class="action-row">
+        <button
+            id="spinButton"
+            class="spin-button"
+            type="button"
+        >
+            ⚡ SPIN
+        </button>
+
+        <button
+            id="resetButton"
+            class="secondary-button"
+            type="button"
+        >
+            ↻ Restart
+        </button>
+    </div>
+
+    <p id="status" class="status">
+        Press SPIN to begin your draft.
+    </p>
 </section>
+
 
 <section class="panel">
-    <h2>Player pool</h2>
-    <div id="playerPool" class="players"></div>
+    <h2 class="section-title">Choose Attribute</h2>
+
+    <p class="section-subtitle">
+        Once you spin a player, choose which unused attribute you want to take from them.
+    </p>
+
+    <div
+        id="attributeChoices"
+        class="attribute-grid"
+    ></div>
 </section>
 
-<section class="panel" id="resultsPanel" hidden>
-    <h2>Final results</h2>
+
+<section class="panel">
+    <h2 class="section-title">Your Build</h2>
+
+    <p class="section-subtitle">
+        Your seven selected attributes.
+    </p>
+
+    <div
+        id="assignments"
+        class="build-grid"
+    ></div>
+</section>
+
+
+<section class="panel">
+    <h2 class="section-title">Player Pool</h2>
+
+    <p class="section-subtitle">
+        Every player remains in the pool, so the same player can be spun multiple times.
+    </p>
+
+    <div
+        id="playerPool"
+        class="players"
+    ></div>
+</section>
+
+
+<section
+    class="panel results-panel"
+    id="resultsPanel"
+    hidden
+>
+    <h2 class="section-title">
+        Final Build
+    </h2>
+
+    <p class="section-subtitle">
+        Your completed FTFG Attribute Draft.
+    </p>
 
     <div class="results">
 
         <div class="result-card">
-            <p class="muted">Overall OVR</p>
-            <div class="score" id="overallScore">0</div>
+            <div class="result-label">
+                Overall OVR
+            </div>
+
+            <div
+                class="score"
+                id="overallScore"
+            >
+                0
+            </div>
         </div>
 
         <div class="result-card">
-            <p class="muted">Money</p>
-            <div class="score" id="moneyScore">0</div>
+            <div class="result-label">
+                Money
+            </div>
+
+            <div
+                class="score"
+                id="moneyScore"
+            >
+                $0
+            </div>
         </div>
 
         <div class="result-card">
-            <p class="muted">Bih's Fuhed</p>
-            <div class="score" id="fuhedScore">0</div>
+            <div class="result-label">
+                Bih's Fuhed
+            </div>
+
+            <div
+                class="score"
+                id="fuhedScore"
+            >
+                0
+            </div>
         </div>
 
     </div>
 
-    <p class="muted">
-        Money = ((Manners + Kindliness) × Smarts)².
-        Bih's Fuhed = (Height + Build + Humorous + Athleticism + Kindliness) ÷ 8.
-    </p>
+    <div class="formula">
+        <strong>Money:</strong>
+        ((Manners + Kindliness) × Smarts)²
 
-    <h3>Submit your score</h3>
+        <br>
 
-    <p class="muted">
-        Choose a name for the shared leaderboard.
-    </p>
+        <strong>Bih's Fuhed:</strong>
+        (Height + Build + Humorous + Athleticism + Kindliness) ÷ 8
+    </div>
 
-    <input
-        id="leaderboardName"
-        maxlength="24"
-        placeholder="Enter your name"
-        autocomplete="nickname"
-    >
+    <div class="submit-area">
+        <h3>Put your build on the leaderboard</h3>
 
-    <p>
-        <button id="submitButton" class="primary" type="button">
-            Submit to leaderboard
+        <input
+            id="leaderboardName"
+            maxlength="24"
+            placeholder="Enter your name"
+            autocomplete="nickname"
+        >
+
+        <br>
+
+        <button
+            id="submitButton"
+            class="submit-button"
+            type="button"
+        >
+            Submit Build
         </button>
-    </p>
 
-    <p id="submitStatus" class="status" role="status"></p>
+        <p
+            id="submitStatus"
+            class="status"
+        ></p>
+    </div>
 </section>
 
+
 <section class="panel">
-    <h2>Shared leaderboard</h2>
+    <div class="leaderboard-head">
+        <div>
+            <h2 class="section-title">
+                Leaderboard
+            </h2>
 
-    <p class="muted">
-        Highest overall scores appear first.
-    </p>
+            <div class="section-subtitle">
+                Highest overall builds.
+            </div>
+        </div>
 
-    <button id="refreshButton" type="button">
-        Refresh leaderboard
-    </button>
-
-    <p id="leaderboardStatus" class="status" role="status"></p>
+        <button
+            id="refreshButton"
+            class="secondary-button"
+            type="button"
+        >
+            ↻ Refresh
+        </button>
+    </div>
 
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>Rank</th>
                     <th>Name</th>
                     <th>Overall</th>
                     <th>Money</th>
@@ -400,14 +925,22 @@ small {
 
             <tbody id="leaderboardRows">
                 <tr>
-                    <td colspan="5">Loading scores…</td>
+                    <td colspan="5">
+                        Loading leaderboard...
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <p
+        id="leaderboardStatus"
+        class="status"
+    ></p>
 </section>
 
 </main>
+
 
 <script>
 const players = [
@@ -534,14 +1067,19 @@ let spinning = false;
 let soundEnabled = true;
 let audioContext = null;
 
-const $ = id => document.getElementById(id);
+const $ = id =>
+    document.getElementById(id);
+
 
 function heightOVR(height) {
-    const parts = height.split("'");
+    const parts =
+        height.split("'");
 
     const inches =
         Number(parts[0]) * 12 +
-        Number(parts[1].replace('"', ''));
+        Number(
+            parts[1].replace('"', "")
+        );
 
     return Math.max(
         1,
@@ -552,13 +1090,17 @@ function heightOVR(height) {
     );
 }
 
+
 function rating(player, attribute) {
     if (attribute === "Height") {
-        return heightOVR(heights[player]);
+        return heightOVR(
+            heights[player]
+        );
     }
 
     return ratings[player][attribute];
 }
+
 
 function playTone(
     frequency = 500,
@@ -584,30 +1126,41 @@ function playTone(
             audioContext.createGain();
 
         oscillator.type = type;
-        oscillator.frequency.value = frequency;
+
+        oscillator.frequency.value =
+            frequency;
 
         gain.gain.setValueAtTime(
-            0.07,
+            0.06,
             audioContext.currentTime
         );
 
         gain.gain.exponentialRampToValueAtTime(
             0.001,
-            audioContext.currentTime + duration
+            audioContext.currentTime +
+            duration
         );
 
         oscillator.connect(gain);
-        gain.connect(audioContext.destination);
+
+        gain.connect(
+            audioContext.destination
+        );
 
         oscillator.start();
 
         oscillator.stop(
-            audioContext.currentTime + duration
+            audioContext.currentTime +
+            duration
         );
+
     } catch (error) {
-        console.log("Sound unavailable.");
+        console.log(
+            "Sound unavailable"
+        );
     }
 }
+
 
 function imagePath(player) {
     return (
@@ -617,63 +1170,94 @@ function imagePath(player) {
     );
 }
 
+
 function buildHasPlayer(player) {
-    return Object.values(build).includes(player);
+    return Object.values(build)
+        .includes(player);
 }
+
 
 function createPlayerCard(player) {
     const card =
         document.createElement("div");
 
-    card.className = "player-card";
+    card.className =
+        "player-card";
 
     const img =
         document.createElement("img");
 
-    img.src = imagePath(player);
-    img.alt = player;
-    img.loading = "lazy";
+    img.src =
+        imagePath(player);
+
+    img.alt =
+        player;
+
+    img.loading =
+        "lazy";
 
     img.onerror = () => {
         if (!img.dataset.triedJpeg) {
-            img.dataset.triedJpeg = "true";
+            img.dataset.triedJpeg =
+                "true";
 
             img.src =
                 "/static/images/" +
                 player.toLowerCase() +
                 ".jpeg";
         } else {
-            img.classList.add("missing");
+            img.classList.add(
+                "missing"
+            );
         }
     };
+
+    const info =
+        document.createElement("div");
+
+    info.className =
+        "player-info";
 
     const name =
         document.createElement("div");
 
-    name.className = "player-name";
-    name.textContent = player;
+    name.className =
+        "player-name";
+
+    name.textContent =
+        player;
 
     const state =
         document.createElement("small");
 
+    state.className =
+        "player-state";
+
     if (buildHasPlayer(player)) {
         state.textContent =
-            "Used in build · can appear again";
+            "Used • still available";
     } else {
-        state.textContent = "Available";
+        state.textContent =
+            "Available";
     }
+
+    info.append(
+        name,
+        state
+    );
 
     card.append(
         img,
-        name,
-        state
+        info
     );
 
     return card;
 }
 
+
 function renderPlayerPool() {
-    const pool = $("playerPool");
+    const pool =
+        $("playerPool");
 
     pool.replaceChildren();
 
@@ -684,33 +1268,14 @@ function renderPlayerPool() {
     });
 }
 
+
 function renderAssignments() {
     const container =
         $("assignments");
 
     container.replaceChildren();
 
-    if (
-        Object.keys(build).length === 0
-    ) {
-        const message =
-            document.createElement("p");
-
-        message.className = "muted";
-
-        message.textContent =
-            "Your assigned players will appear here.";
-
-        container.append(message);
-
-        return;
-    }
-
     attributes.forEach(attribute => {
-        if (!build[attribute]) {
-            return;
-        }
-
         const card =
             document.createElement("div");
 
@@ -718,37 +1283,68 @@ function renderAssignments() {
             "attribute-card";
 
         const title =
-            document.createElement("strong");
+            document.createElement(
+                "strong"
+            );
 
         title.textContent =
             attribute;
 
-        const player =
-            document.createElement("div");
+        card.append(title);
 
-        player.textContent =
-            build[attribute];
+        if (build[attribute]) {
+            const player =
+                document.createElement(
+                    "div"
+                );
 
-        const value =
-            document.createElement("div");
+            player.className =
+                "build-player";
 
-        value.className = "green";
+            player.textContent =
+                build[attribute];
 
-        value.textContent =
-            rating(
-                build[attribute],
-                attribute
-            ) + " OVR";
+            const value =
+                document.createElement(
+                    "div"
+                );
 
-        card.append(
-            title,
-            player,
-            value
-        );
+            value.className =
+                "build-rating";
+
+            value.textContent =
+                rating(
+                    build[attribute],
+                    attribute
+                ) +
+                " OVR";
+
+            card.append(
+                player,
+                value
+            );
+        } else {
+            const empty =
+                document.createElement(
+                    "div"
+                );
+
+            empty.style.color =
+                "#64748b";
+
+            empty.style.marginTop =
+                "20px";
+
+            empty.textContent =
+                "EMPTY";
+
+            card.append(empty);
+        }
 
         container.append(card);
     });
 }
+
 
 function renderAttributeChoices() {
     const container =
@@ -758,18 +1354,24 @@ function renderAttributeChoices() {
 
     attributes.forEach(attribute => {
         const button =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
-        button.type = "button";
+        button.type =
+            "button";
 
         button.className =
             "attribute-choice";
 
         if (build[attribute]) {
             button.textContent =
-                attribute + " ✓";
+                attribute +
+                " ✓";
 
-            button.classList.add("used");
+            button.classList.add(
+                "used"
+            );
         } else {
             button.textContent =
                 attribute;
@@ -778,40 +1380,57 @@ function renderAttributeChoices() {
         button.disabled =
             !currentPerson ||
             spinning ||
-            Boolean(build[attribute]);
+            Boolean(
+                build[attribute]
+            );
 
         button.addEventListener(
             "click",
-            () => assignAttribute(attribute)
+            () =>
+                assignAttribute(
+                    attribute
+                )
         );
 
-        container.append(button);
+        container.append(
+            button
+        );
     });
 }
 
+
 function updateRound() {
     $("roundNumber").textContent =
-        Math.min(round + 1, 7);
+        Math.min(
+            round + 1,
+            7
+        );
 
     if (round >= 7) {
-        $("currentAttribute").textContent =
-            "Draft complete!";
+        $("currentAttribute")
+            .textContent =
+            "DRAFT COMPLETE";
     } else if (currentPerson) {
-        $("currentAttribute").textContent =
-            "Choose an attribute";
+        $("currentAttribute")
+            .textContent =
+            currentPerson +
+            " — Choose an Attribute";
     } else {
-        $("currentAttribute").textContent =
-            "Spin for a player";
+        $("currentAttribute")
+            .textContent =
+            "Spin for a Player";
     }
 }
 
+
 function calculateScores() {
     const values =
-        attributes.map(attribute =>
-            rating(
-                build[attribute],
-                attribute
-            )
+        attributes.map(
+            attribute =>
+                rating(
+                    build[attribute],
+                    attribute
+                )
         );
 
     const overall =
@@ -842,15 +1461,13 @@ function calculateScores() {
         );
 
     const money =
-        Math.round(
-            Math.pow(
-                (
-                    manners +
-                    kindliness
-                ) * smarts,
-                2
-            )
-        );
+        (
+            (
+                manners +
+                kindliness
+            ) *
+            smarts
+        ) ** 2;
 
     const fuhed =
         (
@@ -883,6 +1500,7 @@ function calculateScores() {
     };
 }
 
+
 function finishDraft() {
     const scores =
         calculateScores();
@@ -911,20 +1529,25 @@ function finishDraft() {
         true;
 
     $("spinButton").textContent =
-        "DRAFT COMPLETE";
-
-    $("currentAttribute").textContent =
-        "Draft complete!";
+        "✓ COMPLETE";
 
     $("status").textContent =
-        "All seven attributes have been assigned.";
+        "Your FTFG build is complete.";
 
+    updateRound();
     renderAssignments();
     renderPlayerPool();
     renderAttributeChoices();
 
+    $("resultsPanel")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
     loadLeaderboard();
 }
+
 
 function spin() {
     if (
@@ -935,7 +1558,8 @@ function spin() {
         return;
     }
 
-    spinning = true;
+    spinning =
+        true;
 
     $("spinButton").disabled =
         true;
@@ -944,7 +1568,7 @@ function spin() {
         "SPINNING...";
 
     $("status").textContent =
-        "The reels are spinning...";
+        "Finding your player...";
 
     renderAttributeChoices();
 
@@ -956,10 +1580,11 @@ function spin() {
             )
         ];
 
-    let ticks = 0;
+    let ticks =
+        0;
 
     const maxTicks =
-        16 +
+        18 +
         Math.floor(
             Math.random() * 8
         );
@@ -972,8 +1597,9 @@ function spin() {
 
     const timer =
         setInterval(() => {
+
             reelIds.forEach(id => {
-                const randomPlayer =
+                const random =
                     players[
                         Math.floor(
                             Math.random() *
@@ -982,20 +1608,25 @@ function spin() {
                     ];
 
                 $(id).textContent =
-                    randomPlayer;
+                    random;
             });
 
             playTone(
-                300 +
-                Math.random() * 500,
-                0.035,
+                320 +
+                Math.random() *
+                450,
+                0.03,
                 "square"
             );
 
             ticks++;
 
-            if (ticks >= maxTicks) {
-                clearInterval(timer);
+            if (
+                ticks >= maxTicks
+            ) {
+                clearInterval(
+                    timer
+                );
 
                 currentPerson =
                     winner;
@@ -1003,24 +1634,26 @@ function spin() {
                 spinning =
                     false;
 
-                $("reel1").textContent =
+                $("reel1")
+                    .textContent =
                     "PLAYER";
 
-                $("reel2").textContent =
+                $("reel2")
+                    .textContent =
                     winner;
 
-                $("reel3").textContent =
-                    "CHOOSE ATTRIBUTE";
+                $("reel3")
+                    .textContent =
+                    "LOCKED IN";
 
-                $("status").textContent =
+                $("status")
+                    .textContent =
                     winner +
-                    " was selected! Choose an available attribute below.";
+                    " has been selected. Choose their attribute.";
 
-                $("spinButton").textContent =
+                $("spinButton")
+                    .textContent =
                     "CHOOSE ATTRIBUTE";
-
-                $("spinButton").disabled =
-                    true;
 
                 playTone(
                     760,
@@ -1030,8 +1663,10 @@ function spin() {
                 updateRound();
                 renderAttributeChoices();
             }
-        }, 85);
+
+        }, 80);
 }
+
 
 function assignAttribute(attribute) {
     if (
@@ -1049,21 +1684,33 @@ function assignAttribute(attribute) {
     build[attribute] =
         player;
 
+    const score =
+        rating(
+            player,
+            attribute
+        );
+
     currentPerson =
         null;
 
     round++;
 
+    $("reel1").textContent =
+        attribute.toUpperCase();
+
+    $("reel2").textContent =
+        player;
+
+    $("reel3").textContent =
+        score + " OVR";
+
     $("status").textContent =
         player +
-        " was assigned to " +
+        " → " +
         attribute +
-        " with " +
-        rating(
-            player,
-            attribute
-        ) +
-        " OVR!";
+        " · " +
+        score +
+        " OVR";
 
     renderAssignments();
     renderPlayerPool();
@@ -1079,41 +1726,49 @@ function assignAttribute(attribute) {
         false;
 
     $("spinButton").textContent =
-        "SPIN FOR NEXT PLAYER";
+        "⚡ SPIN AGAIN";
 }
 
+
 function resetDraft() {
-    round = 0;
-    build = {};
-    currentPerson = null;
-    spinning = false;
+    round =
+        0;
+
+    build =
+        {};
+
+    currentPerson =
+        null;
+
+    spinning =
+        false;
 
     $("resultsPanel").hidden =
         true;
 
+    $("leaderboardName").value =
+        "";
+
     $("submitStatus").textContent =
         "";
 
-    $("leaderboardName").value =
-        "";
+    $("reel1").textContent =
+        "READY";
+
+    $("reel2").textContent =
+        "FTFG";
+
+    $("reel3").textContent =
+        "DRAFT";
+
+    $("status").textContent =
+        "Press SPIN to begin your draft.";
 
     $("spinButton").disabled =
         false;
 
     $("spinButton").textContent =
-        "SPIN";
-
-    $("reel1").textContent =
-        "Ready";
-
-    $("reel2").textContent =
-        "Set";
-
-    $("reel3").textContent =
-        "Draft";
-
-    $("status").textContent =
-        "Press SPIN to start.";
+        "⚡ SPIN";
 
     updateRound();
     renderAssignments();
@@ -1121,9 +1776,11 @@ function resetDraft() {
     renderAttributeChoices();
 }
 
+
 async function loadLeaderboard() {
-    $("leaderboardStatus").textContent =
-        "Loading leaderboard...";
+    $("leaderboardStatus")
+        .textContent =
+        "Loading...";
 
     try {
         const response =
@@ -1145,30 +1802,64 @@ async function loadLeaderboard() {
 
         tbody.replaceChildren();
 
-        if (rows.length === 0) {
+        if (!rows.length) {
             const tr =
-                document.createElement("tr");
+                document.createElement(
+                    "tr"
+                );
 
             const td =
-                document.createElement("td");
+                document.createElement(
+                    "td"
+                );
 
-            td.colSpan = 5;
+            td.colSpan =
+                5;
 
             td.textContent =
-                "No scores yet. Complete a draft and submit the first score!";
+                "No scores yet.";
 
             tr.append(td);
             tbody.append(tr);
         } else {
+
             rows.forEach(
                 (entry, index) => {
+
                     const tr =
                         document.createElement(
                             "tr"
                         );
 
+                    const rank =
+                        document.createElement(
+                            "td"
+                        );
+
+                    rank.className =
+                        "rank";
+
+                    if (index === 0) {
+                        rank.textContent =
+                            "🥇 1";
+                    } else if (
+                        index === 1
+                    ) {
+                        rank.textContent =
+                            "🥈 2";
+                    } else if (
+                        index === 2
+                    ) {
+                        rank.textContent =
+                            "🥉 3";
+                    } else {
+                        rank.textContent =
+                            index + 1;
+                    }
+
+                    tr.append(rank);
+
                     const values = [
-                        index + 1,
                         entry.name,
                         entry.overall,
                         "$" +
@@ -1187,30 +1878,36 @@ async function loadLeaderboard() {
                         )
                     ];
 
-                    values.forEach(value => {
-                        const td =
-                            document.createElement(
-                                "td"
-                            );
+                    values.forEach(
+                        value => {
+                            const td =
+                                document.createElement(
+                                    "td"
+                                );
 
-                        td.textContent =
-                            value;
+                            td.textContent =
+                                value;
 
-                        tr.append(td);
-                    });
+                            tr.append(td);
+                        }
+                    );
 
                     tbody.append(tr);
                 }
             );
         }
 
-        $("leaderboardStatus").textContent =
-            "Leaderboard updated.";
+        $("leaderboardStatus")
+            .textContent =
+            "";
+
     } catch (error) {
-        $("leaderboardStatus").textContent =
+        $("leaderboardStatus")
+            .textContent =
             "Could not load leaderboard.";
     }
 }
+
 
 async function submitScore() {
     const name =
@@ -1222,7 +1919,8 @@ async function submitScore() {
         !name ||
         name.length > 24
     ) {
-        $("submitStatus").textContent =
+        $("submitStatus")
+            .textContent =
             "Enter a name between 1 and 24 characters.";
 
         return;
@@ -1230,10 +1928,12 @@ async function submitScore() {
 
     if (
         round !== 7 ||
-        Object.keys(build).length !== 7
+        Object.keys(build)
+            .length !== 7
     ) {
-        $("submitStatus").textContent =
-            "Complete all seven attributes first.";
+        $("submitStatus")
+            .textContent =
+            "Complete your draft first.";
 
         return;
     }
@@ -1241,11 +1941,13 @@ async function submitScore() {
     const scores =
         calculateScores();
 
-    $("submitButton").disabled =
+    $("submitButton")
+        .disabled =
         true;
 
-    $("submitStatus").textContent =
-        "Submitting score...";
+    $("submitStatus")
+        .textContent =
+        "Submitting...";
 
     try {
         const response =
@@ -1283,64 +1985,78 @@ async function submitScore() {
             );
         }
 
-        $("submitStatus").textContent =
-            "Score submitted successfully!";
+        $("submitStatus")
+            .textContent =
+            "✓ Build submitted!";
 
         await loadLeaderboard();
+
     } catch (error) {
-        $("submitStatus").textContent =
+        $("submitStatus")
+            .textContent =
             error.message;
+
     } finally {
-        $("submitButton").disabled =
+        $("submitButton")
+            .disabled =
             false;
     }
 }
 
-$("spinButton").addEventListener(
-    "click",
-    spin
-);
 
-$("resetButton").addEventListener(
-    "click",
-    resetDraft
-);
+/* BUTTON CONNECTIONS */
 
-$("submitButton").addEventListener(
-    "click",
-    submitScore
-);
+$("spinButton")
+    .addEventListener(
+        "click",
+        spin
+    );
 
-$("refreshButton").addEventListener(
-    "click",
-    loadLeaderboard
-);
+$("resetButton")
+    .addEventListener(
+        "click",
+        resetDraft
+    );
 
-$("soundButton").addEventListener(
-    "click",
-    () => {
-        soundEnabled =
-            !soundEnabled;
+$("submitButton")
+    .addEventListener(
+        "click",
+        submitScore
+    );
 
-        $("soundButton").textContent =
-            "Sound: " +
-            (
+$("refreshButton")
+    .addEventListener(
+        "click",
+        loadLeaderboard
+    );
+
+$("soundButton")
+    .addEventListener(
+        "click",
+        () => {
+            soundEnabled =
+                !soundEnabled;
+
+            $("soundButton")
+                .textContent =
                 soundEnabled
-                    ? "ON"
-                    : "OFF"
-            );
+                    ? "🔊 Sound ON"
+                    : "🔇 Sound OFF";
 
-        if (soundEnabled) {
-            playTone(
-                600,
-                0.08
-            );
+            if (soundEnabled) {
+                playTone(
+                    600,
+                    0.08
+                );
+            }
         }
-    }
-);
+    );
 
-renderPlayerPool();
+
+/* START PAGE */
+
 renderAssignments();
+renderPlayerPool();
 renderAttributeChoices();
 updateRound();
 loadLeaderboard();
