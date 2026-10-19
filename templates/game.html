@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,6 +138,13 @@ th, td {
 }
 .table-wrap { overflow-x: auto; }
 small { color: var(--muted); }
+.attribute-choice {
+    min-height: 48px;
+}
+.attribute-choice.used {
+    opacity: .45;
+    border-style: dashed;
+}
 @media (max-width: 520px) {
     main { padding: 10px; }
     .panel { padding: 14px; }
@@ -162,11 +168,11 @@ small { color: var(--muted); }
     <section class="panel center">
         <h2>Draft your seven attributes</h2>
         <p class="muted">
-            Each spin assigns one unique player to the next attribute.
-            Seven players will be selected; two will remain undrafted.
+            Spin to reveal a player, then choose any available attribute.
+            Players can appear more than once, but each attribute is used once.
         </p>
         <p>Attribute <span id="roundNumber">1</span> of 7</p>
-        <div id="currentAttribute">Height</div>
+        <div id="currentAttribute">Spin for a player</div>
         <div class="reels" aria-live="polite">
             <div class="reel" id="reel1">Ready</div>
             <div class="reel" id="reel2">Set</div>
@@ -175,6 +181,12 @@ small { color: var(--muted); }
         <button id="spinButton" class="primary" type="button">SPIN</button>
         <button id="resetButton" type="button">Restart Draft</button>
         <p id="status" class="status" role="status">Press SPIN to start.</p>
+    </section>
+
+    <section class="panel">
+        <h2>Choose an attribute</h2>
+        <p class="muted">After the reels stop, click the attribute you want to assign to that player.</p>
+        <div id="attributeChoices" class="attributes"></div>
     </section>
 
     <section class="panel">
@@ -206,9 +218,8 @@ small { color: var(--muted); }
             </div>
         </div>
         <p class="muted">
-            Overall averages all seven attributes. Money averages Smarts,
-            Kindliness, Humorous, and Manners. Bih's Fuhed averages Build,
-            Humorous, Manners, and Height.
+            Overall is the average of all seven attributes. Money = ((Manners + Kindliness) × Smarts)².
+            Bih's Fuhed = (Height + Build + Humorous + Athleticism + Kindliness) ÷ 8.
         </p>
         <h3>Submit your score</h3>
         <p class="muted">Choose a name for the shared leaderboard.</p>
@@ -268,7 +279,7 @@ const heights = {
 
 let round = 0;
 let build = {};
-let availablePlayers = [...players];
+let currentPerson = null;
 let spinning = false;
 let soundEnabled = true;
 let audioContext = null;
@@ -287,14 +298,17 @@ function rating(player, attribute) {
 
 function playTone(frequency = 500, duration = 0.07, type = "sine") {
     if (!soundEnabled) return;
+
     try {
         audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioContext.createOscillator();
         const gain = audioContext.createGain();
+
         oscillator.type = type;
         oscillator.frequency.value = frequency;
         gain.gain.setValueAtTime(0.07, audioContext.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+
         oscillator.connect(gain);
         gain.connect(audioContext.destination);
         oscillator.start();
@@ -309,10 +323,12 @@ function imagePath(player) {
 function createPlayerCard(player) {
     const card = document.createElement("div");
     card.className = "player-card";
+
     const img = document.createElement("img");
     img.src = imagePath(player);
     img.alt = player;
     img.loading = "lazy";
+
     img.onerror = () => {
         if (!img.dataset.triedJpeg) {
             img.dataset.triedJpeg = "true";
@@ -321,11 +337,16 @@ function createPlayerCard(player) {
             img.classList.add("missing");
         }
     };
+
     const name = document.createElement("div");
     name.className = "player-name";
     name.textContent = player;
+
     const state = document.createElement("small");
-    state.textContent = buildHasPlayer(player) ? "Drafted" : "Available";
+    state.textContent = buildHasPlayer(player)
+        ? "Assigned before · can repeat"
+        : "Available";
+
     card.append(img, name, state);
     return card;
 }
@@ -337,10 +358,9 @@ function buildHasPlayer(player) {
 function renderPlayerPool() {
     const pool = $("playerPool");
     pool.replaceChildren();
+
     players.forEach(player => {
-        const card = createPlayerCard(player);
-        if (buildHasPlayer(player)) card.style.opacity = "0.45";
-        pool.append(card);
+        pool.append(createPlayerCard(player));
     });
 }
 
@@ -358,207 +378,112 @@ function renderAssignments() {
 
     attributes.forEach(attribute => {
         if (!build[attribute]) return;
+
         const card = document.createElement("div");
         card.className = "attribute-card";
+
         const title = document.createElement("strong");
         title.textContent = attribute;
+
         const player = document.createElement("div");
         player.textContent = build[attribute];
+
         const value = document.createElement("div");
         value.className = "green";
         value.textContent = rating(build[attribute], attribute) + " OVR";
+
         card.append(title, player, value);
         container.append(card);
     });
 }
 
+function renderAttributeChoices() {
+    const container = $("attributeChoices");
+    container.replaceChildren();
+
+    attributes.forEach(attribute => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "attribute-choice";
+        button.textContent = build[attribute] ? attribute + " ✓" : attribute;
+
+        if (build[attribute]) {
+            button.classList.add("used");
+        }
+
+        button.disabled = !currentPerson || spinning || Boolean(build[attribute]);
+        button.addEventListener("click", () => assignAttribute(attribute));
+
+        container.append(button);
+    });
+}
+
 function updateRound() {
     $("roundNumber").textContent = Math.min(round + 1, 7);
-    $("currentAttribute").textContent = attributes[round] || "Draft complete";
+
+    if (round >= attributes.length) {
+        $("currentAttribute").textContent = "Draft complete!";
+    } else if (currentPerson) {
+        $("currentAttribute").textContent = "Choose an attribute";
+    } else {
+        $("currentAttribute").textContent = "Spin for a player";
+    }
 }
 
 function calculateScores() {
     const values = attributes.map(attribute => rating(build[attribute], attribute));
-    const overall = Math.round(values.reduce((sum, value) => sum + value, 0) / 7);
-    const average = list => Math.round(list.reduce((sum, attribute) =>
-        sum + rating(build[attribute], attribute), 0) / list.length);
+    const overall = Math.round(
+        values.reduce((sum, value) => sum + value, 0) / 7
+    );
 
-    return {
-        overall,
-        money: average(["Smarts", "Kindliness", "Humorous", "Manners"]),
-        fuhed: average(["Build", "Humorous", "Manners", "Height"])
-    };
+    const manners = rating(build.Manners, "Manners");
+    const kindliness = rating(build.Kindliness, "Kindliness");
+    const smarts = rating(build.Smarts, "Smarts");
+
+    const money = Math.round(
+        Math.pow((manners + kindliness) * smarts, 2)
+    );
+
+    const fuhed = (
+        rating(build.Height, "Height") +
+        rating(build.Build, "Build") +
+        rating(build.Humorous, "Humorous") +
+        rating(build.Athleticism, "Athleticism") +
+        rating(build.Kindliness, "Kindliness")
+    ) / 8;
+
+    return { overall, money, fuhed };
 }
 
 function finishDraft() {
     const scores = calculateScores();
+
     $("overallScore").textContent = scores.overall;
-    $("moneyScore").textContent = scores.money;
-    $("fuhedScore").textContent = scores.fuhed;
+    $("moneyScore").textContent = "$" + scores.money.toLocaleString("en-US");
+    $("fuhedScore").textContent = scores.fuhed.toLocaleString("en-US", {
+        maximumFractionDigits: 2
+    });
+
     $("resultsPanel").hidden = false;
     $("spinButton").disabled = true;
     $("currentAttribute").textContent = "Draft complete!";
-    $("status").textContent = "All seven attributes have been assigned. Two players remain undrafted.";
+    $("status").textContent = "All seven attributes have been assigned.";
+
     renderAssignments();
     renderPlayerPool();
+    renderAttributeChoices();
     loadLeaderboard();
 }
 
 function spin() {
-    if (spinning || round >= attributes.length) return;
-    if (availablePlayers.length === 0) return;
+    if (spinning || currentPerson || round >= attributes.length) return;
 
     spinning = true;
     $("spinButton").disabled = true;
+    $("spinButton").textContent = "SPINNING…";
     $("status").textContent = "The reels are spinning…";
-    const attribute = attributes[round];
-    const winnerIndex = Math.floor(Math.random() * availablePlayers.length);
-    const winner = availablePlayers[winnerIndex];
 
-    let ticks = 0;
-    const maxTicks = 16 + Math.floor(Math.random() * 8);
-    const reelIds = ["reel1", "reel2", "reel3"];
+    renderAttributeChoices();
 
-    const timer = setInterval(() => {
-        reelIds.forEach((id, index) => {
-            const name = players[Math.floor(Math.random() * players.length)];
-            $(id).textContent = index === 1 ? name : players[Math.floor(Math.random() * players.length)];
-        });
-        playTone(300 + Math.random() * 500, 0.035, "square");
-        ticks++;
-
-        if (ticks >= maxTicks) {
-            clearInterval(timer);
-            build[attribute] = winner;
-            availablePlayers = availablePlayers.filter(player => player !== winner);
-
-            $("reel1").textContent = attribute;
-            $("reel2").textContent = winner;
-            $("reel3").textContent = rating(winner, attribute) + " OVR";
-
-            playTone(760, 0.18);
-            $("status").textContent = winner + " gets " + attribute + " with " + rating(winner, attribute) + " OVR!";
-            round++;
-            renderAssignments();
-            renderPlayerPool();
-            updateRound();
-            spinning = false;
-
-            if (round === attributes.length) {
-                finishDraft();
-            } else {
-                $("spinButton").disabled = false;
-                $("spinButton").textContent = "SPIN FOR " + attributes[round].toUpperCase();
-            }
-        }
-    }, 85);
-}
-
-function resetDraft() {
-    round = 0;
-    build = {};
-    availablePlayers = [...players];
-    spinning = false;
-    $("resultsPanel").hidden = true;
-    $("submitStatus").textContent = "";
-    $("leaderboardName").value = "";
-    $("spinButton").disabled = false;
-    $("spinButton").textContent = "SPIN";
-    $("reel1").textContent = "Ready";
-    $("reel2").textContent = "Set";
-    $("reel3").textContent = "Draft";
-    $("status").textContent = "Press SPIN to start.";
-    updateRound();
-    renderAssignments();
-    renderPlayerPool();
-}
-
-async function loadLeaderboard() {
-    $("leaderboardStatus").textContent = "Loading leaderboard…";
-    try {
-        const response = await fetch("/api/leaderboard");
-        if (!response.ok) throw new Error("Could not load leaderboard");
-        const rows = await response.json();
-        const tbody = $("leaderboardRows");
-        tbody.replaceChildren();
-
-        if (!rows.length) {
-            const tr = document.createElement("tr");
-            const td = document.createElement("td");
-            td.colSpan = 5;
-            td.textContent = "No scores yet. Complete a draft and submit the first score!";
-            tr.append(td);
-            tbody.append(tr);
-        } else {
-            rows.forEach((entry, index) => {
-                const tr = document.createElement("tr");
-                [index + 1, entry.name, entry.overall, entry.money, entry.fuhed].forEach(value => {
-                    const td = document.createElement("td");
-                    td.textContent = value;
-                    tr.append(td);
-                });
-                tbody.append(tr);
-            });
-        }
-        $("leaderboardStatus").textContent = "Leaderboard updated.";
-    } catch (error) {
-        $("leaderboardStatus").textContent = "Could not load leaderboard. Check that the server has deployed successfully.";
-    }
-}
-
-async function submitScore() {
-    const name = $("leaderboardName").value.trim();
-    if (!name || name.length > 24) {
-        $("submitStatus").textContent = "Enter a name between 1 and 24 characters.";
-        return;
-    }
-    if (round !== 7 || Object.keys(build).length !== 7) {
-        $("submitStatus").textContent = "Complete all seven attributes first.";
-        return;
-    }
-
-    const scores = calculateScores();
-    $("submitButton").disabled = true;
-    $("submitStatus").textContent = "Submitting score…";
-
-    try {
-        const response = await fetch("/api/leaderboard", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                name,
-                build,
-                overall: scores.overall,
-                money: scores.money,
-                fuhed: scores.fuhed
-            })
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || "Submission failed");
-
-        $("submitStatus").textContent = "Score submitted successfully!";
-        await loadLeaderboard();
-    } catch (error) {
-        $("submitStatus").textContent = error.message;
-    } finally {
-        $("submitButton").disabled = false;
-    }
-}
-
-$("spinButton").addEventListener("click", spin);
-$("resetButton").addEventListener("click", resetDraft);
-$("submitButton").addEventListener("click", submitScore);
-$("refreshButton").addEventListener("click", loadLeaderboard);
-$("soundButton").addEventListener("click", () => {
-    soundEnabled = !soundEnabled;
-    $("soundButton").textContent = "Sound: " + (soundEnabled ? "ON" : "OFF");
-    if (soundEnabled) playTone(600, 0.08);
-});
-
-renderPlayerPool();
-renderAssignments();
-updateRound();
-loadLeaderboard();
-</script>
-</body>
-</html>
+    // Pick from every player on every spin, allowing repeats.
+    const winner = players[Math.floor(Math.random() * players.length)];
