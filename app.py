@@ -11,6 +11,16 @@ ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 
 @app.route("/")
 def home():
+    return render_template("game.html")
+
+
+@app.route("/game")
+def game():
+    return render_template("game.html")
+
+
+@app.route("/tier-list")
+def tier_list():
     PEOPLE_FOLDER.mkdir(parents=True, exist_ok=True)
 
     people = [
@@ -27,11 +37,6 @@ def home():
     ]
 
     return render_template("index.html", people=people)
-
-
-@app.route("/game")
-def game():
-    return render_template("game.html")
 
 
 if __name__ == "__main__":
