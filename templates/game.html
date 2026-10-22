@@ -16,6 +16,8 @@
     --pink: #ff5ea8;
     --yellow: #ffd65a;
     --blue: #548cff;
+    --orange: #ff9f43;
+    --red: #ff647c;
     --text: #f8fafc;
     --muted: #94a3b8;
     --border: rgba(148, 163, 184, 0.18);
@@ -174,7 +176,7 @@ main {
     text-align: center;
 }
 
-/* DRAFT HERO */
+/* DRAFT */
 
 .draft-panel {
     padding: 30px;
@@ -329,11 +331,11 @@ button:disabled {
     color: var(--muted);
 }
 
-/* ATTRIBUTES */
+/* ATTRIBUTE CHOICES */
 
 .attribute-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
 }
 
@@ -352,31 +354,39 @@ button:disabled {
 }
 
 .attribute-choice:nth-child(1) {
-    border-color: rgba(53,217,255,.35);
+    border-color: rgba(53,217,255,.45);
 }
 
 .attribute-choice:nth-child(2) {
-    border-color: rgba(165,108,255,.35);
+    border-color: rgba(165,108,255,.45);
 }
 
 .attribute-choice:nth-child(3) {
-    border-color: rgba(255,214,90,.35);
+    border-color: rgba(255,214,90,.45);
 }
 
 .attribute-choice:nth-child(4) {
-    border-color: rgba(139,255,93,.35);
+    border-color: rgba(139,255,93,.45);
 }
 
 .attribute-choice:nth-child(5) {
-    border-color: rgba(255,94,168,.35);
+    border-color: rgba(255,94,168,.45);
 }
 
 .attribute-choice:nth-child(6) {
-    border-color: rgba(84,140,255,.4);
+    border-color: rgba(84,140,255,.5);
 }
 
 .attribute-choice:nth-child(7) {
-    border-color: rgba(76,255,196,.35);
+    border-color: rgba(76,255,196,.45);
+}
+
+.attribute-choice:nth-child(8) {
+    border-color: rgba(255,100,124,.5);
+}
+
+.attribute-choice:nth-child(9) {
+    border-color: rgba(255,159,67,.5);
 }
 
 .attribute-choice:hover:not(:disabled) {
@@ -393,7 +403,7 @@ button:disabled {
 
 .build-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
 }
 
@@ -577,7 +587,11 @@ input:focus {
     margin-top: 10px;
     padding: 13px 20px;
     border-radius: 12px;
-    background: linear-gradient(100deg, var(--purple), var(--cyan));
+    background: linear-gradient(
+        100deg,
+        var(--purple),
+        var(--cyan)
+    );
     color: white;
     font-weight: 900;
     cursor: pointer;
@@ -633,16 +647,11 @@ tbody tr:hover {
     font-weight: 950;
 }
 
-/* MOBILE */
+/* RESPONSIVE */
 
 @media (max-width: 1000px) {
     .players {
         grid-template-columns: repeat(5, 1fr);
-    }
-
-    .attribute-grid,
-    .build-grid {
-        grid-template-columns: repeat(4, 1fr);
     }
 }
 
@@ -712,12 +721,13 @@ tbody tr:hover {
 <main>
 
 <section class="panel draft-panel center">
+
     <div class="round-badge">
-        ROUND <span id="roundNumber">1</span> / 7
+        ROUND <span id="roundNumber">1</span> / 9
     </div>
 
     <div id="currentAttribute">
-        Spin for a player
+        Spin for a Player
     </div>
 
     <p class="section-subtitle">
@@ -731,6 +741,7 @@ tbody tr:hover {
     </div>
 
     <div class="action-row">
+
         <button
             id="spinButton"
             class="spin-button"
@@ -746,16 +757,21 @@ tbody tr:hover {
         >
             ↻ Restart
         </button>
+
     </div>
 
     <p id="status" class="status">
         Press SPIN to begin your draft.
     </p>
+
 </section>
 
 
 <section class="panel">
-    <h2 class="section-title">Choose Attribute</h2>
+
+    <h2 class="section-title">
+        Choose Attribute
+    </h2>
 
     <p class="section-subtitle">
         Once you spin a player, choose which unused attribute you want to take from them.
@@ -765,25 +781,33 @@ tbody tr:hover {
         id="attributeChoices"
         class="attribute-grid"
     ></div>
+
 </section>
 
 
 <section class="panel">
-    <h2 class="section-title">Your Build</h2>
+
+    <h2 class="section-title">
+        Your Build
+    </h2>
 
     <p class="section-subtitle">
-        Your seven selected attributes.
+        Your nine selected attributes.
     </p>
 
     <div
         id="assignments"
         class="build-grid"
     ></div>
+
 </section>
 
 
 <section class="panel">
-    <h2 class="section-title">Player Pool</h2>
+
+    <h2 class="section-title">
+        Player Pool
+    </h2>
 
     <p class="section-subtitle">
         Every player remains in the pool, so the same player can be spun multiple times.
@@ -793,6 +817,7 @@ tbody tr:hover {
         id="playerPool"
         class="players"
     ></div>
+
 </section>
 
 
@@ -801,6 +826,7 @@ tbody tr:hover {
     id="resultsPanel"
     hidden
 >
+
     <h2 class="section-title">
         Final Build
     </h2>
@@ -853,6 +879,12 @@ tbody tr:hover {
     </div>
 
     <div class="formula">
+
+        <strong>Overall:</strong>
+        Average of all 9 drafted attributes
+
+        <br>
+
         <strong>Money:</strong>
         ((Manners + Kindliness) × Smarts)²
 
@@ -860,10 +892,14 @@ tbody tr:hover {
 
         <strong>Bih's Fuhed:</strong>
         (Height + Build + Humorous + Athleticism + Kindliness) ÷ 8
+
     </div>
 
     <div class="submit-area">
-        <h3>Put your build on the leaderboard</h3>
+
+        <h3>
+            Put your build on the leaderboard
+        </h3>
 
         <input
             id="leaderboardName"
@@ -886,12 +922,16 @@ tbody tr:hover {
             id="submitStatus"
             class="status"
         ></p>
+
     </div>
+
 </section>
 
 
 <section class="panel">
+
     <div class="leaderboard-head">
+
         <div>
             <h2 class="section-title">
                 Leaderboard
@@ -909,10 +949,13 @@ tbody tr:hover {
         >
             ↻ Refresh
         </button>
+
     </div>
 
     <div class="table-wrap">
+
         <table>
+
             <thead>
                 <tr>
                     <th>Rank</th>
@@ -930,19 +973,27 @@ tbody tr:hover {
                     </td>
                 </tr>
             </tbody>
+
         </table>
+
     </div>
 
     <p
         id="leaderboardStatus"
         class="status"
     ></p>
+
 </section>
 
 </main>
 
 
 <script>
+
+/* =========================
+   PLAYERS + ATTRIBUTES
+========================= */
+
 const players = [
     "Max",
     "Quinn",
@@ -962,17 +1013,27 @@ const attributes = [
     "Athleticism",
     "Kindliness",
     "Humorous",
-    "Manners"
+    "Manners",
+    "Rizz",
+    "Vehicle"
 ];
 
+
+/* =========================
+   PLAYER RATINGS
+========================= */
+
 const ratings = {
+
     Max: {
         Build: 70,
-        Smarts: 90,
+        Smarts: 99,
         Athleticism: 94,
         Kindliness: 91,
         Humorous: 82,
-        Manners: 93
+        Manners: 93,
+        Rizz: 93,
+        Vehicle: 99
     },
 
     Quinn: {
@@ -981,7 +1042,9 @@ const ratings = {
         Athleticism: 95,
         Kindliness: 81,
         Humorous: 88,
-        Manners: 85
+        Manners: 85,
+        Rizz: 84,
+        Vehicle: 92
     },
 
     Chase: {
@@ -990,7 +1053,9 @@ const ratings = {
         Athleticism: 83,
         Kindliness: 89,
         Humorous: 83,
-        Manners: 80
+        Manners: 80,
+        Rizz: 32,
+        Vehicle: 84
     },
 
     Will: {
@@ -999,7 +1064,9 @@ const ratings = {
         Athleticism: 88,
         Kindliness: 94,
         Humorous: 90,
-        Manners: 94
+        Manners: 94,
+        Rizz: 95,
+        Vehicle: 90
     },
 
     Walter: {
@@ -1008,7 +1075,9 @@ const ratings = {
         Athleticism: 87,
         Kindliness: 97,
         Humorous: 91,
-        Manners: 81
+        Manners: 81,
+        Rizz: 92,
+        Vehicle: 65
     },
 
     Connor: {
@@ -1017,7 +1086,9 @@ const ratings = {
         Athleticism: 85,
         Kindliness: 80,
         Humorous: 98,
-        Manners: 61
+        Manners: 61,
+        Rizz: 89,
+        Vehicle: 0
     },
 
     Noah: {
@@ -1026,7 +1097,9 @@ const ratings = {
         Athleticism: 93,
         Kindliness: 85,
         Humorous: 93,
-        Manners: 85
+        Manners: 85,
+        Rizz: 91,
+        Vehicle: 85
     },
 
     Jaden: {
@@ -1035,7 +1108,9 @@ const ratings = {
         Athleticism: 94,
         Kindliness: 96,
         Humorous: 90,
-        Manners: 95
+        Manners: 95,
+        Rizz: 92,
+        Vehicle: 75
     },
 
     Jackson: {
@@ -1044,9 +1119,17 @@ const ratings = {
         Athleticism: 85,
         Kindliness: 89,
         Humorous: 90,
-        Manners: 89
+        Manners: 89,
+        Rizz: 97,
+        Vehicle: 81
     }
+
 };
+
+
+/* =========================
+   HEIGHTS
+========================= */
 
 const heights = {
     Max: "6'0\"",
@@ -1060,6 +1143,11 @@ const heights = {
     Jackson: "5'9\""
 };
 
+
+/* =========================
+   GAME STATE
+========================= */
+
 let round = 0;
 let build = {};
 let currentPerson = null;
@@ -1071,7 +1159,12 @@ const $ = id =>
     document.getElementById(id);
 
 
+/* =========================
+   RATINGS
+========================= */
+
 function heightOVR(height) {
+
     const parts =
         height.split("'");
 
@@ -1092,6 +1185,7 @@ function heightOVR(height) {
 
 
 function rating(player, attribute) {
+
     if (attribute === "Height") {
         return heightOVR(
             heights[player]
@@ -1102,16 +1196,22 @@ function rating(player, attribute) {
 }
 
 
+/* =========================
+   SOUND
+========================= */
+
 function playTone(
     frequency = 500,
     duration = 0.07,
     type = "sine"
 ) {
+
     if (!soundEnabled) {
         return;
     }
 
     try {
+
         audioContext =
             audioContext ||
             new (
@@ -1126,7 +1226,6 @@ function playTone(
             audioContext.createGain();
 
         oscillator.type = type;
-
         oscillator.frequency.value =
             frequency;
 
@@ -1155,14 +1254,21 @@ function playTone(
         );
 
     } catch (error) {
+
         console.log(
             "Sound unavailable"
         );
+
     }
 }
 
 
+/* =========================
+   PLAYER CARDS
+========================= */
+
 function imagePath(player) {
+
     return (
         "/static/images/" +
         player.toLowerCase() +
@@ -1172,12 +1278,14 @@ function imagePath(player) {
 
 
 function buildHasPlayer(player) {
+
     return Object.values(build)
         .includes(player);
 }
 
 
 function createPlayerCard(player) {
+
     const card =
         document.createElement("div");
 
@@ -1197,7 +1305,9 @@ function createPlayerCard(player) {
         "lazy";
 
     img.onerror = () => {
+
         if (!img.dataset.triedJpeg) {
+
             img.dataset.triedJpeg =
                 "true";
 
@@ -1205,10 +1315,13 @@ function createPlayerCard(player) {
                 "/static/images/" +
                 player.toLowerCase() +
                 ".jpeg";
+
         } else {
+
             img.classList.add(
                 "missing"
             );
+
         }
     };
 
@@ -1234,11 +1347,15 @@ function createPlayerCard(player) {
         "player-state";
 
     if (buildHasPlayer(player)) {
+
         state.textContent =
             "Used • still available";
+
     } else {
+
         state.textContent =
             "Available";
+
     }
 
     info.append(
@@ -1256,26 +1373,35 @@ function createPlayerCard(player) {
 
 
 function renderPlayerPool() {
+
     const pool =
         $("playerPool");
 
     pool.replaceChildren();
 
     players.forEach(player => {
+
         pool.append(
             createPlayerCard(player)
         );
+
     });
 }
 
 
+/* =========================
+   BUILD
+========================= */
+
 function renderAssignments() {
+
     const container =
         $("assignments");
 
     container.replaceChildren();
 
     attributes.forEach(attribute => {
+
         const card =
             document.createElement("div");
 
@@ -1293,6 +1419,7 @@ function renderAssignments() {
         card.append(title);
 
         if (build[attribute]) {
+
             const player =
                 document.createElement(
                     "div"
@@ -1323,7 +1450,9 @@ function renderAssignments() {
                 player,
                 value
             );
+
         } else {
+
             const empty =
                 document.createElement(
                     "div"
@@ -1339,20 +1468,28 @@ function renderAssignments() {
                 "EMPTY";
 
             card.append(empty);
+
         }
 
         container.append(card);
+
     });
 }
 
 
+/* =========================
+   ATTRIBUTE BUTTONS
+========================= */
+
 function renderAttributeChoices() {
+
     const container =
         $("attributeChoices");
 
     container.replaceChildren();
 
     attributes.forEach(attribute => {
+
         const button =
             document.createElement(
                 "button"
@@ -1365,6 +1502,7 @@ function renderAttributeChoices() {
             "attribute-choice";
 
         if (build[attribute]) {
+
             button.textContent =
                 attribute +
                 " ✓";
@@ -1372,9 +1510,12 @@ function renderAttributeChoices() {
             button.classList.add(
                 "used"
             );
+
         } else {
+
             button.textContent =
                 attribute;
+
         }
 
         button.disabled =
@@ -1395,35 +1536,54 @@ function renderAttributeChoices() {
         container.append(
             button
         );
+
     });
 }
 
 
+/* =========================
+   ROUND DISPLAY
+========================= */
+
 function updateRound() {
+
     $("roundNumber").textContent =
         Math.min(
             round + 1,
-            7
+            attributes.length
         );
 
-    if (round >= 7) {
+    if (
+        round >= attributes.length
+    ) {
+
         $("currentAttribute")
             .textContent =
             "DRAFT COMPLETE";
+
     } else if (currentPerson) {
+
         $("currentAttribute")
             .textContent =
             currentPerson +
             " — Choose an Attribute";
+
     } else {
+
         $("currentAttribute")
             .textContent =
             "Spin for a Player";
+
     }
 }
 
 
+/* =========================
+   SCORE CALCULATIONS
+========================= */
+
 function calculateScores() {
+
     const values =
         attributes.map(
             attribute =>
@@ -1439,7 +1599,7 @@ function calculateScores() {
                 (sum, value) =>
                     sum + value,
                 0
-            ) / 7
+            ) / attributes.length
         );
 
     const manners =
@@ -1475,22 +1635,27 @@ function calculateScores() {
                 build.Height,
                 "Height"
             ) +
+
             rating(
                 build.Build,
                 "Build"
             ) +
+
             rating(
                 build.Humorous,
                 "Humorous"
             ) +
+
             rating(
                 build.Athleticism,
                 "Athleticism"
             ) +
+
             rating(
                 build.Kindliness,
                 "Kindliness"
             )
+
         ) / 8;
 
     return {
@@ -1501,7 +1666,12 @@ function calculateScores() {
 }
 
 
+/* =========================
+   FINISH DRAFT
+========================= */
+
 function finishDraft() {
+
     const scores =
         calculateScores();
 
@@ -1549,11 +1719,16 @@ function finishDraft() {
 }
 
 
+/* =========================
+   SPIN
+========================= */
+
 function spin() {
+
     if (
         spinning ||
         currentPerson ||
-        round >= 7
+        round >= attributes.length
     ) {
         return;
     }
@@ -1571,6 +1746,15 @@ function spin() {
         "Finding your player...";
 
     renderAttributeChoices();
+
+    /*
+        IMPORTANT:
+        We always select from the full
+        players array.
+
+        This means the same person can
+        appear multiple times.
+    */
 
     const winner =
         players[
@@ -1599,6 +1783,7 @@ function spin() {
         setInterval(() => {
 
             reelIds.forEach(id => {
+
                 const random =
                     players[
                         Math.floor(
@@ -1609,6 +1794,7 @@ function spin() {
 
                 $(id).textContent =
                     random;
+
             });
 
             playTone(
@@ -1624,6 +1810,7 @@ function spin() {
             if (
                 ticks >= maxTicks
             ) {
+
                 clearInterval(
                     timer
                 );
@@ -1662,18 +1849,24 @@ function spin() {
 
                 updateRound();
                 renderAttributeChoices();
+
             }
 
         }, 80);
 }
 
 
+/* =========================
+   ASSIGN ATTRIBUTE
+========================= */
+
 function assignAttribute(attribute) {
+
     if (
         !currentPerson ||
         spinning ||
         build[attribute] ||
-        round >= 7
+        round >= attributes.length
     ) {
         return;
     }
@@ -1717,9 +1910,13 @@ function assignAttribute(attribute) {
     renderAttributeChoices();
     updateRound();
 
-    if (round >= 7) {
+    if (
+        round >= attributes.length
+    ) {
+
         finishDraft();
         return;
+
     }
 
     $("spinButton").disabled =
@@ -1730,7 +1927,12 @@ function assignAttribute(attribute) {
 }
 
 
+/* =========================
+   RESET
+========================= */
+
 function resetDraft() {
+
     round =
         0;
 
@@ -1777,21 +1979,29 @@ function resetDraft() {
 }
 
 
+/* =========================
+   LEADERBOARD
+========================= */
+
 async function loadLeaderboard() {
+
     $("leaderboardStatus")
         .textContent =
         "Loading...";
 
     try {
+
         const response =
             await fetch(
                 "/api/leaderboard"
             );
 
         if (!response.ok) {
+
             throw new Error(
                 "Could not load leaderboard"
             );
+
         }
 
         const rows =
@@ -1803,6 +2013,7 @@ async function loadLeaderboard() {
         tbody.replaceChildren();
 
         if (!rows.length) {
+
             const tr =
                 document.createElement(
                     "tr"
@@ -1821,6 +2032,7 @@ async function loadLeaderboard() {
 
             tr.append(td);
             tbody.append(tr);
+
         } else {
 
             rows.forEach(
@@ -1840,21 +2052,29 @@ async function loadLeaderboard() {
                         "rank";
 
                     if (index === 0) {
+
                         rank.textContent =
                             "🥇 1";
+
                     } else if (
                         index === 1
                     ) {
+
                         rank.textContent =
                             "🥈 2";
+
                     } else if (
                         index === 2
                     ) {
+
                         rank.textContent =
                             "🥉 3";
+
                     } else {
+
                         rank.textContent =
                             index + 1;
+
                     }
 
                     tr.append(rank);
@@ -1862,12 +2082,14 @@ async function loadLeaderboard() {
                     const values = [
                         entry.name,
                         entry.overall,
+
                         "$" +
                         Number(
                             entry.money
                         ).toLocaleString(
                             "en-US"
                         ),
+
                         Number(
                             entry.fuhed
                         ).toLocaleString(
@@ -1880,6 +2102,7 @@ async function loadLeaderboard() {
 
                     values.forEach(
                         value => {
+
                             const td =
                                 document.createElement(
                                     "td"
@@ -1889,12 +2112,15 @@ async function loadLeaderboard() {
                                 value;
 
                             tr.append(td);
+
                         }
                     );
 
                     tbody.append(tr);
+
                 }
             );
+
         }
 
         $("leaderboardStatus")
@@ -1902,14 +2128,21 @@ async function loadLeaderboard() {
             "";
 
     } catch (error) {
+
         $("leaderboardStatus")
             .textContent =
             "Could not load leaderboard.";
+
     }
 }
 
 
+/* =========================
+   SUBMIT SCORE
+========================= */
+
 async function submitScore() {
+
     const name =
         $("leaderboardName")
             .value
@@ -1919,6 +2152,7 @@ async function submitScore() {
         !name ||
         name.length > 24
     ) {
+
         $("submitStatus")
             .textContent =
             "Enter a name between 1 and 24 characters.";
@@ -1927,10 +2161,11 @@ async function submitScore() {
     }
 
     if (
-        round !== 7 ||
-        Object.keys(build)
-            .length !== 7
+        round !== attributes.length ||
+        Object.keys(build).length !==
+        attributes.length
     ) {
+
         $("submitStatus")
             .textContent =
             "Complete your draft first.";
@@ -1950,6 +2185,7 @@ async function submitScore() {
         "Submitting...";
 
     try {
+
         const response =
             await fetch(
                 "/api/leaderboard",
@@ -1979,10 +2215,12 @@ async function submitScore() {
             await response.json();
 
         if (!response.ok) {
+
             throw new Error(
                 result.error ||
                 "Submission failed"
             );
+
         }
 
         $("submitStatus")
@@ -1992,19 +2230,24 @@ async function submitScore() {
         await loadLeaderboard();
 
     } catch (error) {
+
         $("submitStatus")
             .textContent =
             error.message;
 
     } finally {
+
         $("submitButton")
             .disabled =
             false;
+
     }
 }
 
 
-/* BUTTON CONNECTIONS */
+/* =========================
+   BUTTON CONNECTIONS
+========================= */
 
 $("spinButton")
     .addEventListener(
@@ -2034,6 +2277,7 @@ $("soundButton")
     .addEventListener(
         "click",
         () => {
+
             soundEnabled =
                 !soundEnabled;
 
@@ -2044,22 +2288,28 @@ $("soundButton")
                     : "🔇 Sound OFF";
 
             if (soundEnabled) {
+
                 playTone(
                     600,
                     0.08
                 );
+
             }
+
         }
     );
 
 
-/* START PAGE */
+/* =========================
+   START PAGE
+========================= */
 
 renderAssignments();
 renderPlayerPool();
 renderAttributeChoices();
 updateRound();
 loadLeaderboard();
+
 </script>
 
 </body>
