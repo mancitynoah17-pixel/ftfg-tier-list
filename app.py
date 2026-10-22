@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, jsonify
 from pathlib import Path
 import sqlite3
@@ -17,21 +16,110 @@ PLAYERS = [
     "Connor", "Noah", "Jaden", "Jackson"
 ]
 
+# Now 9 total attributes
 ATTRIBUTES = [
-    "Height", "Build", "Smarts", "Athleticism",
-    "Kindliness", "Humorous", "Manners"
+    "Height",
+    "Build",
+    "Smarts",
+    "Athleticism",
+    "Kindliness",
+    "Humorous",
+    "Manners",
+    "Rizz",
+    "Vehicle"
 ]
 
 RATINGS = {
-    "Max":     {"Build": 70, "Smarts": 99, "Athleticism": 94, "Kindliness": 91, "Humorous": 82, "Manners": 93},
-    "Quinn":   {"Build": 89, "Smarts": 88, "Athleticism": 95, "Kindliness": 81, "Humorous": 88, "Manners": 85},
-    "Chase":   {"Build": 75, "Smarts": 95, "Athleticism": 83, "Kindliness": 89, "Humorous": 83, "Manners": 80},
-    "Will":    {"Build": 95, "Smarts": 83, "Athleticism": 88, "Kindliness": 94, "Humorous": 90, "Manners": 94},
-    "Walter":  {"Build": 80, "Smarts": 99, "Athleticism": 87, "Kindliness": 97, "Humorous": 91, "Manners": 81},
-    "Connor":  {"Build": 96, "Smarts": 79, "Athleticism": 85, "Kindliness": 80, "Humorous": 98, "Manners": 61},
-    "Noah":    {"Build": 73, "Smarts": 86, "Athleticism": 93, "Kindliness": 85, "Humorous": 93, "Manners": 85},
-    "Jaden":   {"Build": 96, "Smarts": 80, "Athleticism": 94, "Kindliness": 96, "Humorous": 90, "Manners": 95},
-    "Jackson": {"Build": 86, "Smarts": 96, "Athleticism": 85, "Kindliness": 89, "Humorous": 90, "Manners": 89}
+    "Max": {
+        "Build": 70,
+        "Smarts": 99,
+        "Athleticism": 94,
+        "Kindliness": 91,
+        "Humorous": 82,
+        "Manners": 93,
+        "Rizz": 93,
+        "Vehicle": 99
+    },
+    "Quinn": {
+        "Build": 89,
+        "Smarts": 88,
+        "Athleticism": 95,
+        "Kindliness": 81,
+        "Humorous": 88,
+        "Manners": 85,
+        "Rizz": 84,
+        "Vehicle": 92
+    },
+    "Chase": {
+        "Build": 75,
+        "Smarts": 95,
+        "Athleticism": 83,
+        "Kindliness": 89,
+        "Humorous": 83,
+        "Manners": 80,
+        "Rizz": 32,
+        "Vehicle": 84
+    },
+    "Will": {
+        "Build": 95,
+        "Smarts": 83,
+        "Athleticism": 88,
+        "Kindliness": 94,
+        "Humorous": 90,
+        "Manners": 94,
+        "Rizz": 95,
+        "Vehicle": 90
+    },
+    "Walter": {
+        "Build": 80,
+        "Smarts": 99,
+        "Athleticism": 87,
+        "Kindliness": 97,
+        "Humorous": 91,
+        "Manners": 81,
+        "Rizz": 92,
+        "Vehicle": 65
+    },
+    "Connor": {
+        "Build": 96,
+        "Smarts": 79,
+        "Athleticism": 85,
+        "Kindliness": 80,
+        "Humorous": 98,
+        "Manners": 61,
+        "Rizz": 89,
+        "Vehicle": 0
+    },
+    "Noah": {
+        "Build": 73,
+        "Smarts": 86,
+        "Athleticism": 93,
+        "Kindliness": 85,
+        "Humorous": 93,
+        "Manners": 85,
+        "Rizz": 91,
+        "Vehicle": 85
+    },
+    "Jaden": {
+        "Build": 96,
+        "Smarts": 80,
+        "Athleticism": 94,
+        "Kindliness": 96,
+        "Humorous": 90,
+        "Manners": 95,
+        "Rizz": 92,
+        "Vehicle": 75
+    },
+    "Jackson": {
+        "Build": 86,
+        "Smarts": 96,
+        "Athleticism": 85,
+        "Kindliness": 89,
+        "Humorous": 90,
+        "Manners": 89,
+        "Rizz": 97,
+        "Vehicle": 81
+    }
 }
 
 HEIGHTS = {
@@ -56,12 +144,17 @@ def height_ovr(height):
     feet = int(height.split("'")[0])
     inches = int(height.split("'")[1].replace('"', ""))
     total_inches = feet * 12 + inches
-    return max(1, min(99, 99 - (77 - total_inches) * 3))
+
+    return max(
+        1,
+        min(99, 99 - (77 - total_inches) * 3)
+    )
 
 
 def get_rating(player, attribute):
     if attribute == "Height":
         return height_ovr(HEIGHTS[player])
+
     return RATINGS[player][attribute]
 
 
@@ -71,17 +164,26 @@ def calculate_scores(build):
         for attribute, player in build.items()
     }
 
-    # Overall: average of all seven attribute ratings.
-    overall = round_half_up(sum(scores.values()) / 7)
+    # Overall:
+    # Average of all NINE selected attribute ratings.
+    overall = round_half_up(
+        sum(scores.values()) / len(ATTRIBUTES)
+    )
 
-    # Money: ((Manners + Kindliness) * Smarts) ** 2.
+    # Money:
+    # ((Manners + Kindliness) * Smarts) ** 2
     calculated_money = (
-        (scores["Manners"] + scores["Kindliness"])
+        (
+            scores["Manners"]
+            + scores["Kindliness"]
+        )
         * scores["Smarts"]
     ) ** 2
 
-    # Bih's Fuhed: (Height + Build + Humorous
-    #               + Athleticism + Kindliness) / 8.
+    # Bih's Fuhed:
+    # (Height + Build + Humorous + Athleticism + Kindliness) / 8
+    #
+    # This formula stays exactly the same as before.
     calculated_fuhed = (
         scores["Height"]
         + scores["Build"]
@@ -98,7 +200,10 @@ def calculate_scores(build):
 
 
 def init_database():
-    Path(app.instance_path).mkdir(parents=True, exist_ok=True)
+    Path(app.instance_path).mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
     with sqlite3.connect(DATABASE) as connection:
         connection.execute("""
@@ -129,7 +234,10 @@ def game():
 
 @app.route("/tier-list")
 def tier_list():
-    PEOPLE_FOLDER.mkdir(parents=True, exist_ok=True)
+    PEOPLE_FOLDER.mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
     people = [
         {
@@ -144,71 +252,144 @@ def tier_list():
         and image.suffix.lower() in ALLOWED_EXTENSIONS
     ]
 
-    return render_template("index.html", people=people)
+    return render_template(
+        "index.html",
+        people=people
+    )
 
 
-@app.route("/api/leaderboard", methods=["GET"])
+@app.route(
+    "/api/leaderboard",
+    methods=["GET"]
+)
 def get_leaderboard():
     with sqlite3.connect(DATABASE) as connection:
         connection.row_factory = sqlite3.Row
+
         rows = connection.execute("""
-            SELECT name, overall, money, fuhed, created_at
+            SELECT
+                name,
+                overall,
+                money,
+                fuhed,
+                created_at
             FROM leaderboard
-            ORDER BY overall DESC, money DESC, fuhed DESC, id ASC
+            ORDER BY
+                overall DESC,
+                money DESC,
+                fuhed DESC,
+                id ASC
             LIMIT 100
         """).fetchall()
 
-    return jsonify([dict(row) for row in rows])
+    return jsonify([
+        dict(row)
+        for row in rows
+    ])
 
 
-@app.route("/api/leaderboard", methods=["POST"])
+@app.route(
+    "/api/leaderboard",
+    methods=["POST"]
+)
 def save_leaderboard():
-    data = request.get_json(silent=True) or {}
+    data = request.get_json(
+        silent=True
+    ) or {}
 
-    name = str(data.get("name", "")).strip()
+    name = str(
+        data.get("name", "")
+    ).strip()
+
     build = data.get("build")
 
     if not name or len(name) > 24:
         return jsonify({
-            "error": "Enter a name of 1–24 characters."
+            "error": (
+                "Enter a name of "
+                "1–24 characters."
+            )
         }), 400
 
     if not isinstance(build, dict):
-        return jsonify({"error": "Your build is missing."}), 400
-
-    if set(build.keys()) != set(ATTRIBUTES):
         return jsonify({
-            "error": "Your build must contain all seven attributes."
+            "error": "Your build is missing."
         }), 400
 
-    # Repeated players are allowed. Only the attribute names must be unique.
+    # Must now contain all NINE attributes.
+    if set(build.keys()) != set(ATTRIBUTES):
+        return jsonify({
+            "error": (
+                "Your build must contain "
+                "all nine attributes."
+            )
+        }), 400
+
+    # Repeated players are allowed.
     if any(
-        not isinstance(player, str) or player not in PLAYERS
+        not isinstance(player, str)
+        or player not in PLAYERS
         for player in build.values()
     ):
-        return jsonify({"error": "Invalid player in build."}), 400
+        return jsonify({
+            "error": "Invalid player in build."
+        }), 400
 
     try:
-        # Calculate the scores on the server instead of trusting the browser.
+        # Calculate scores on the server.
         calculated = calculate_scores(build)
 
-        # Validate submitted values.
         overall = data.get("overall")
         money = data.get("money")
         fuhed = data.get("fuhed")
 
-        if isinstance(overall, bool) or not isinstance(overall, (int, float)):
-            return jsonify({"error": "Invalid overall score."}), 400
+        if (
+            isinstance(overall, bool)
+            or not isinstance(
+                overall,
+                (int, float)
+            )
+        ):
+            return jsonify({
+                "error": "Invalid overall score."
+            }), 400
 
-        if isinstance(money, bool) or not isinstance(money, (int, float)):
-            return jsonify({"error": "Invalid money score."}), 400
+        if (
+            isinstance(money, bool)
+            or not isinstance(
+                money,
+                (int, float)
+            )
+        ):
+            return jsonify({
+                "error": "Invalid money score."
+            }), 400
 
-        if isinstance(fuhed, bool) or not isinstance(fuhed, (int, float)):
-            return jsonify({"error": "Invalid Fuhed score."}), 400
+        if (
+            isinstance(fuhed, bool)
+            or not isinstance(
+                fuhed,
+                (int, float)
+            )
+        ):
+            return jsonify({
+                "error": "Invalid Fuhed score."
+            }), 400
 
-        if not all(math.isfinite(value) for value in (overall, money, fuhed)):
-            return jsonify({"error": "Invalid score data."}), 400
+        if not all(
+            math.isfinite(value)
+            for value in (
+                overall,
+                money,
+                fuhed
+            )
+        ):
+            return jsonify({
+                "error": "Invalid score data."
+            }), 400
 
+        # Make sure browser-calculated scores
+        # match server-calculated scores.
         if (
             overall != calculated["overall"]
             or money != calculated["money"]
@@ -221,7 +402,8 @@ def save_leaderboard():
         ):
             return jsonify({
                 "error": (
-                    "The submitted scores don't match your build. "
+                    "The submitted scores "
+                    "don't match your build. "
                     "Please refresh and try again."
                 )
             }), 400
@@ -229,7 +411,13 @@ def save_leaderboard():
         with sqlite3.connect(DATABASE) as connection:
             connection.execute("""
                 INSERT INTO leaderboard
-                    (name, overall, money, fuhed, build)
+                    (
+                        name,
+                        overall,
+                        money,
+                        fuhed,
+                        build
+                    )
                 VALUES (?, ?, ?, ?, ?)
             """, (
                 name,
@@ -241,11 +429,20 @@ def save_leaderboard():
 
         return jsonify({
             "success": True,
-            "message": "Your score has been submitted!"
+            "message": (
+                "Your score has been submitted!"
+            )
         }), 201
 
-    except (TypeError, ValueError, KeyError, OverflowError):
-        return jsonify({"error": "Invalid score data."}), 400
+    except (
+        TypeError,
+        ValueError,
+        KeyError,
+        OverflowError
+    ):
+        return jsonify({
+            "error": "Invalid score data."
+        }), 400
 
 
 if __name__ == "__main__":
